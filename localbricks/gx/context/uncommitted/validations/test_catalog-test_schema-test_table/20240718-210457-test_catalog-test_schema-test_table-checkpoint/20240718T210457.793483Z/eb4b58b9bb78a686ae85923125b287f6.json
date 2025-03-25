@@ -1,0 +1,82 @@
+{
+  "evaluation_parameters": {},
+  "meta": {
+    "active_batch_definition": {
+      "batch_identifiers": {
+        "catalog": "test_catalog",
+        "schema": "test_schema",
+        "table": "test_table",
+        "timestamp": "2024-07-18 22:04:46"
+      },
+      "data_asset_name": "test_industry-test_catalog-test_schema-test_table",
+      "data_connector_name": "test_industry-test_catalog-test_schema-test_table-data_connector",
+      "datasource_name": "test_industry-test_catalog-test_schema-test_table-datasource"
+    },
+    "batch_markers": {
+      "ge_load_time": "20240718T210457.794990Z"
+    },
+    "batch_spec": {
+      "batch_data": "SparkDataFrame",
+      "data_asset_name": "test_industry-test_catalog-test_schema-test_table"
+    },
+    "checkpoint_id": null,
+    "checkpoint_name": "test_catalog-test_schema-test_table-checkpoint",
+    "expectation_suite_name": "test_catalog-test_schema-test_table",
+    "great_expectations_version": "0.18.8",
+    "run_id": {
+      "run_name": "20240718-210457-test_catalog-test_schema-test_table-checkpoint",
+      "run_time": "2024-07-18T21:04:57.793483+00:00"
+    },
+    "validation_id": null,
+    "validation_time": "20240718T210457.795792Z"
+  },
+  "results": [
+    {
+      "exception_info": {
+        "exception_message": "Error: The unexpected_index_column 'name' does not exist in Spark DataFrame. Please check your configuration and try again.",
+        "exception_traceback": "Traceback (most recent call last):\n  File \"/root/.cache/pypoetry/virtualenvs/deus-pipelines-2fwLc5Hz-py3.10/lib/python3.10/site-packages/great_expectations/execution_engine/execution_engine.py\", line 548, in _process_direct_and_bundled_metric_computation_configurations\n    ] = metric_computation_configuration.metric_fn(  # type: ignore[misc] # F not callable\n  File \"/root/.cache/pypoetry/virtualenvs/deus-pipelines-2fwLc5Hz-py3.10/lib/python3.10/site-packages/great_expectations/expectations/metrics/map_metric_provider/map_condition_auxilliary_methods.py\", line 761, in _spark_map_condition_index\n    raise gx_exceptions.InvalidMetricAccessorDomainKwargsKeyError(\ngreat_expectations.exceptions.exceptions.InvalidMetricAccessorDomainKwargsKeyError: Error: The unexpected_index_column 'name' does not exist in Spark DataFrame. Please check your configuration and try again.\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/root/.cache/pypoetry/virtualenvs/deus-pipelines-2fwLc5Hz-py3.10/lib/python3.10/site-packages/great_expectations/validator/validation_graph.py\", line 285, in _resolve\n    self._execution_engine.resolve_metrics(\n  File \"/root/.cache/pypoetry/virtualenvs/deus-pipelines-2fwLc5Hz-py3.10/lib/python3.10/site-packages/great_expectations/execution_engine/execution_engine.py\", line 283, in resolve_metrics\n    return self._process_direct_and_bundled_metric_computation_configurations(\n  File \"/root/.cache/pypoetry/virtualenvs/deus-pipelines-2fwLc5Hz-py3.10/lib/python3.10/site-packages/great_expectations/execution_engine/execution_engine.py\", line 552, in _process_direct_and_bundled_metric_computation_configurations\n    raise gx_exceptions.MetricResolutionError(\ngreat_expectations.exceptions.exceptions.MetricResolutionError: Error: The unexpected_index_column 'name' does not exist in Spark DataFrame. Please check your configuration and try again.\n",
+        "raised_exception": true
+      },
+      "expectation_config": {
+        "expectation_type": "expect_column_values_to_match_regex",
+        "kwargs": {
+          "batch_id": "eb4b58b9bb78a686ae85923125b287f6",
+          "column": "ingestion_job_run_id",
+          "regex": "^-?\\d+$"
+        },
+        "meta": {}
+      },
+      "meta": {},
+      "result": {},
+      "success": false
+    },
+    {
+      "exception_info": {
+        "exception_message": null,
+        "exception_traceback": null,
+        "raised_exception": false
+      },
+      "expectation_config": {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "batch_id": "eb4b58b9bb78a686ae85923125b287f6",
+          "column": "aircraftOwner",
+          "type_": "StringType"
+        },
+        "meta": {}
+      },
+      "meta": {},
+      "result": {
+        "observed_value": "StringType"
+      },
+      "success": true
+    }
+  ],
+  "statistics": {
+    "evaluated_expectations": 2,
+    "success_percent": 50.0,
+    "successful_expectations": 1,
+    "unsuccessful_expectations": 1
+  },
+  "success": false
+}

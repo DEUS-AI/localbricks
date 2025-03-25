@@ -1,0 +1,1535 @@
+{
+    "dataMappings": {
+        "industry": "maritime",
+        "openIdFunctionExpression": "base64.b64encode(f'CHR#{str(data.vehicle)}:::{str(data.imo)}:::{data.report_date.strftime(\"%Y-%m-%d\")}'.encode('utf-8')).decode('utf-8')",
+        "catalog": "maritime_bronze_layer.`client-chr`.",        
+        "data_frames": [
+            "stormgeo_api_data"
+        ],
+        "merge_table": "merged_data",
+        "join_keys": [
+            "imo",
+            "report_date"
+        ],
+        "dateFormat": [
+            "%Y-%m-%d %H:%M:%S",
+            "%d%m%Y %H:%Mz:%S"
+        ],        
+        "calculableBehaviours": [
+            "Efficient_Auxiliary_Engine_Use",
+            "Engine_Maintenance_Optimisation",
+            "Optimal_Trim",
+            "Efficient_Trim"
+        ],
+        "csvFields": [
+            {
+                "name": "event_id",
+                "type": "string",
+                "options": [],
+                "eventType": "*"
+            },
+            {
+                "name": "event_openid",
+                "type": "string",
+                "options": [
+                    "openid"
+                ],
+                "eventType": "*"
+            },
+            {
+                "name": "customer_name",
+                "type": "string",
+                "options": [],
+                "eventType": "*"
+            },
+            {
+                "name": "customer_code",
+                "type": "string",
+                "options": [],
+                "eventType": "*"
+            },
+            {
+                "name": "operator_id",
+                "type": "string",
+                "options": [
+                    "cpt id"
+                ],
+                "eventType": "*"
+            },
+            {
+                "name": "operator_id2",
+                "type": "string",
+                "options": [
+                    "cheng id"
+                ],
+                "eventType": "*"
+            },
+            {
+                "name": "operator_secondary_code",
+                "type": "string",
+                "options": [
+                    "cpt doc no"
+                ],
+                "regex": "^[0]*|[\\-\\s]",
+                "eventType": "*"
+            },
+            {
+                "name": "operator_secondary_code2",
+                "type": "string",
+                "options": [
+                    "cheng doc no"
+                ],
+                "regex": "^[0]*|[\\-\\s]",
+                "eventType": "*"
+            },
+            {
+                "name": "operator_name",
+                "type": "string",
+                "options": [],
+                "eventType": "*"
+            },
+            {
+                "name": "operator_name2",
+                "type": "string",
+                "options": [
+                    "cheng fullname"
+                ],
+                "eventType": "*"
+            },
+            {
+                "name": "role_alias",
+                "type": "string",
+                "options": [],
+                "eventType": "SHIPPING",
+                "default_value": "Captain"
+            },
+            {
+                "name": "role_alias2",
+                "type": "string",
+                "options": [],
+                "eventType": "SHIPPING",
+                "default_value": "Chief Engineer"
+            },
+            {
+                "name": "identifier",
+                "type": "string",
+                "options": [
+                    "voynum"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "imo",
+                "type": "string",
+                "options": [],
+                "is_metadata": true,
+                "required": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "voyage_time_hs",
+                "type": "number",
+                "options": [
+                    "time"
+                ],
+                "default_value": 24,
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "manoeuvring_hours",
+                "type": "number",
+                "options": [
+                    "manoeuvringhours",
+                    "manoeuvring hours"
+                ],
+                "default_value": 0,
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "arrival_datetime",
+                "type": "date",
+                "options": [],
+                "state": {},
+                "formula": "data['arrival_datetime'] = pd.to_datetime(data.report_date, utc=True)",
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ocurrence_datetime",
+                "type": "date",
+                "options": [],
+                "state": {},
+                "formula": "data['ocurrence_datetime'] = data.arrival_datetime - pd.to_timedelta(data.voyage_time_hs, unit='h') - pd.to_timedelta(data.manoeuvring_hours, unit='h')",
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "vehicle",
+                "type": "string",
+                "options": [
+                    "ship name"
+                ],
+                "state": {
+                    "Stella Theresa": 9594145,
+                    "Sigaia Theresa": 9748710,
+                    "Charlotte Theresa": 9400708,
+                    "Jette Theresa": 9406582,
+                    "Sigrid Theresa": 9392183,
+                    "Alice Theresa": 9478303,
+                    "Annelise Theresa": 9478286,
+                    "Caroline Theresa": 9428449,
+                    "Cathy Theresa": 9478315,
+                    "Karina Theresa": 9428451,
+                    "Tina Theresa": 9478298,
+                    "Likya Theresa": 9479711,
+                    "Susanne Theresa": 9334404,
+                    "Maya Theresa": 9521411,
+                    "Azra S": 9403918,
+                    "Ozden Theresa": 9338735,
+                    "Julia Theresa": 9837573
+                },
+                "formula": "data['vehicle'] = None\nvehicles = []\nfor index, row in data.iterrows():\n\ttry:\n\t\tfound = False\n\t\tfor ship in state.keys():\n\t\t\tif str(row['imo']) == str(state[ship]):\n\t\t\t\tvehicles.append(ship)\n\t\t\t\tfound = True\n\t\tif not found:\n\t\t\tvehicles.append(None)\n\texcept Exception as e:\n\t\tvehicles.append(None)\ndata['vehicle'] = vehicles",
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "origin",
+                "type": "string",
+                "options": [
+                    "prevportunlocode"
+                ],
+                "state": {},
+                "formula": "data['origin'] = np.where(data.origin.isna(), 'UNKNOWN', data.origin)",
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "destination",
+                "type": "string",
+                "options": [
+                    "nextportunlocode"
+                ],
+                "state": {},
+                "formula": "data['destination'] = np.where(data.destination.isna(), 'UNKNOWN', data.destination)",
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "report_date",
+                "type": "date",
+                "options": [
+                    "date",
+                    "voyage date",
+                    "datetime"
+                ],
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "load",
+                "type": "string",
+                "options": [],
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "speed_bosp",
+                "type": "number",
+                "options": [
+                    "speedbosp"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "wind_speed_bf",
+                "type": "number",
+                "options": [
+                    "windspeedbf"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_energy_prod",
+                "type": "number",
+                "options": [
+                    "meenergyprod"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_energy_cons",
+                "type": "number",
+                "options": [
+                    "meenergycons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_hours",
+                "type": "number",
+                "options": [
+                    "mehours"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_hours1",
+                "type": "number",
+                "options": [
+                    "mehours1"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_hours1",
+                "type": "number",
+                "options": [
+                    "aehours1"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_hours2",
+                "type": "number",
+                "options": [
+                    "aehours2"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_hours3",
+                "type": "number",
+                "options": [
+                    "aehours3"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_energy_prod_total",
+                "type": "number",
+                "options": [
+                    "aeenergyprod"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_energy_prod1",
+                "type": "number",
+                "options": [
+                    "aeenergyprod1"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_energy_prod2",
+                "type": "number",
+                "options": [
+                    "aeenergyprod2"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_energy_prod3",
+                "type": "number",
+                "options": [
+                    "aeenergyprod3"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_hours1",
+                "type": "number",
+                "options": [
+                    "boilerhours1"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_hours2",
+                "type": "number",
+                "options": [
+                    "boilerhours2"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "brob_uls_mgo",
+                "type": "number",
+                "options": [
+                    "brobulsmgo"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "brob_vls_hfo",
+                "type": "number",
+                "options": [
+                    "brobvlshfo"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "comb_cons",
+                "type": "number",
+                "options": [
+                    "combcons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "discharge_vls_hfo_cons",
+                "type": "number",
+                "options": [
+                    "dischargevlshfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "fresh_water_cons",
+                "type": "number",
+                "options": [
+                    "freshwatercons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "fresh_water_rob",
+                "type": "number",
+                "options": [
+                    "freshwaterrob"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "distance",
+                "type": "number",
+                "options": [],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "distance_bosp",
+                "type": "number",
+                "options": [
+                    "distancebosp"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "distance_through_water",
+                "type": "number",
+                "options": [
+                    "distancethroughwater"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "uls_do_cons",
+                "type": "number",
+                "options": [
+                    "ulsdocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_sfoc",
+                "type": "number",
+                "options": [
+                    "mesfoc"
+                ],
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_power",
+                "type": "number",
+                "options": [
+                    "mepower"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_cons",
+                "type": "number",
+                "options": [
+                    "mecons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_cyl_oil_cons",
+                "type": "number",
+                "options": [
+                    "mecyloilcons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_cyl_oil_cons_kg",
+                "type": "number",
+                "options": [
+                    "mecyloilconskg"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_lbn_cyl_oil_cons",
+                "type": "number",
+                "options": [
+                    "melbncyloilcons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_spec_cyl_oil_cons",
+                "type": "number",
+                "options": [
+                    "mespeccyloilcons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_vls_hfo_cons",
+                "type": "number",
+                "options": [
+                    "mevlshfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_uls_mgo_cons",
+                "type": "number",
+                "options": [
+                    "meulsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_circ_oil_cons",
+                "type": "number",
+                "options": [
+                    "mecircoilcons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_hbn_cyl_oil_cons",
+                "type": "number",
+                "options": [
+                    "mehbncyloilcons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_vls_mgo_cons",
+                "type": "number",
+                "options": [
+                    "mevlsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_hs_mgo_cons",
+                "type": "number",
+                "options": [
+                    "mehsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_vls_lfo_cons",
+                "type": "number",
+                "options": [
+                    "mevlslfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_uls_hfo_cons",
+                "type": "number",
+                "options": [
+                    "meulshfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_vls_mdo_cons",
+                "type": "number",
+                "options": [
+                    "mevlsmdocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_sfoc",
+                "type": "number",
+                "options": [
+                    "aesfoc"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_power1",
+                "type": "number",
+                "options": [
+                    "aepower1"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_power2",
+                "type": "number",
+                "options": [
+                    "aepower2"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_power3",
+                "type": "number",
+                "options": [
+                    "aepower3"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_cons",
+                "type": "number",
+                "options": [
+                    "aecons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_energy_cons",
+                "type": "number",
+                "options": [
+                    "aeenergycons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_vls_hfo_cons",
+                "type": "number",
+                "options": [
+                    "aevlshfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_uls_mgo_cons",
+                "type": "number",
+                "options": [
+                    "aeulsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_vls_mgo_cons",
+                "type": "number",
+                "options": [
+                    "aevlsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_hs_mgo_cons",
+                "type": "number",
+                "options": [
+                    "aehsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_vls_lfo_cons",
+                "type": "number",
+                "options": [
+                    "aevlslfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_cons",
+                "type": "number",
+                "options": [
+                    "boilercons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_energy_cons",
+                "type": "number",
+                "options": [
+                    "boilerenergycons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_vls_hfo_cons",
+                "type": "number",
+                "options": [
+                    "boilervlshfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_uls_mgo_cons",
+                "type": "number",
+                "options": [
+                    "boilerulsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_clean_vls_hfo_cons",
+                "type": "number",
+                "options": [
+                    "boilercleanvlshfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_heat_vls_hfo_cons",
+                "type": "number",
+                "options": [
+                    "boilerheatvlshfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_clean_uls_mgo_cons",
+                "type": "number",
+                "options": [
+                    "boilercleanulsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_heat_uls_mgo_cons",
+                "type": "number",
+                "options": [
+                    "boilerheatulsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_vls_mgo_cons",
+                "type": "number",
+                "options": [
+                    "boilervlsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_hs_mgo_cons",
+                "type": "number",
+                "options": [
+                    "boilerhsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_heat_hs_mgo_cons",
+                "type": "number",
+                "options": [
+                    "boilerheathsm"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_clean_hs_mgo_cons",
+                "type": "number",
+                "options": [
+                    "boilercleanhsm"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_vls_lfo_cons",
+                "type": "number",
+                "options": [
+                    "boilervlslfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_heat_vls_lfo_cons",
+                "type": "number",
+                "options": [
+                    "boilerheatvlslfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_clean_vls_lfo_cons",
+                "type": "number",
+                "options": [
+                    "boilercleanvlslfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_clean_vls_mgo_cons",
+                "type": "number",
+                "options": [
+                    "boilercleanvlsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_heat_vls_mgo_cons",
+                "type": "number",
+                "options": [
+                    "boilerheatvlsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_clean_uls_hfo_cons",
+                "type": "number",
+                "options": [
+                    "boilercleanulshfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_uls_hfo_cons",
+                "type": "number",
+                "options": [
+                    "boilerulshfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "maneuvering_uls_mgo_cons",
+                "type": "number",
+                "options": [
+                    "maneuveringulsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "maneuvering_vls_hfo_cons",
+                "type": "number",
+                "options": [
+                    "maneuveringvlshfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "maneuvering_vls_mgo_cons",
+                "type": "number",
+                "options": [
+                    "maneuveringvlsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "maneuvering_hs_mgo_cons",
+                "type": "number",
+                "options": [
+                    "maneuveringhsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "maneuvering_vls_lfo_cons",
+                "type": "number",
+                "options": [
+                    "maneuveringvlslfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "maneuvering_uls_hfo_cons",
+                "type": "number",
+                "options": [
+                    "maneuveringulshfocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "event_type_string",
+                "type": "string",
+                "options": [
+                    "eventtypesstring"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ballast",
+                "type": "number",
+                "options": [],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "course",
+                "type": "number",
+                "options": [],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "displacement",
+                "type": "number",
+                "options": [],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "distance_to_go",
+                "type": "number",
+                "options": [
+                    "distancetogo"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "draft_aft",
+                "type": "number",
+                "options": [
+                    "draftaft"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "draft_fore",
+                "type": "number",
+                "options": [
+                    "draftfore"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "draft_mean",
+                "type": "number",
+                "options": [
+                    "draftmean"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "draft_mid",
+                "type": "number",
+                "options": [
+                    "draftmid"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "gm",
+                "type": "number",
+                "options": [],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "next_port",
+                "type": "string",
+                "options": [
+                    "nextport"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "next_port_eta",
+                "type": "date",
+                "options": [
+                    "nextporteta"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "next_port_time_offset",
+                "type": "number",
+                "options": [
+                    "nextporttimeoffset"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "date",
+                "type": "date",
+                "options": [
+                    "date"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "rep_next_port_eta",
+                "type": "date",
+                "options": [
+                    "repnextporteta"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "trim",
+                "type": "number",
+                "is_metadata": true,
+                "options": [],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "trim_ideal",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "trim_perc_actual",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "trim_perc_limit",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "wind_dir",
+                "type": "number",
+                "options": [
+                    "winddir"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "rpm",
+                "type": "number",
+                "options": [],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "rpm1",
+                "type": "number",
+                "options": [],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_daily_cons",
+                "type": "number",
+                "options": [
+                    "medailycons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "me_lcv_daily_cons",
+                "type": "number",
+                "options": [
+                    "melcvdailycons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ordered_speed",
+                "type": "number",
+                "options": [
+                    "orderedspeed"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "voy_num",
+                "type": "string",
+                "options": [
+                    "voynum"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "air_temp",
+                "type": "number",
+                "options": [
+                    "airtemp"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "atmospheric_press",
+                "type": "number",
+                "options": [
+                    "atmosphericpress"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "operational_mode",
+                "type": "string",
+                "options": [
+                    "operationalmode"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "speed_instr",
+                "type": "string",
+                "options": [
+                    "speedinstr"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_daily_cons",
+                "type": "number",
+                "options": [
+                    "aedailycons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_lcv_daily_cons",
+                "type": "number",
+                "options": [
+                    "aelcvdailycons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_daily_cons",
+                "type": "number",
+                "options": [
+                    "boilerdailycons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_lcv_daily_cons",
+                "type": "number",
+                "options": [
+                    "boilerlcvdailycons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "comb_daily_cons",
+                "type": "number",
+                "options": [
+                    "combdailycons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "vls_fo_daily_cons",
+                "type": "number",
+                "options": [
+                    "vlsfodailycons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "uls_do_daily_cons",
+                "type": "number",
+                "options": [
+                    "ulsdodailycons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "vls_do_daily_cons",
+                "type": "number",
+                "options": [
+                    "vlsdodailycons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "hs_do_daily_cons",
+                "type": "number",
+                "options": [
+                    "hsdodailycons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "uls_fo_daily_cons",
+                "type": "number",
+                "options": [
+                    "ulsfodailycons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_heath_smgo_cons",
+                "type": "number",
+                "options": [
+                    "boilerheathsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "boiler_clean_hsmgo_cons",
+                "type": "number",
+                "options": [
+                    "boilercleanhsmgocons"
+                ],
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "fuel_consumption_perfect_trim",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "fuel_consumption_actual_trim",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "emo_total_fuel_used",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "emo_ideal_fuel_used",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "emo_max_fuel_used",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "delta_sfoc",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "aeu",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "ae_used",
+                "type": "number",
+                "options": [
+                    "ae used",
+                    "generator used"
+                ],
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "aux_engine1_max_load",
+                "type": "number",
+                "options": [],
+                "state": {
+                    "9334404": 310,
+                    "9338735": 530,
+                    "9391127": 340,
+                    "9392183": 610,
+                    "9400708": 970,
+                    "9403918": 450,
+                    "9406582": 980,
+                    "9428449": 450,
+                    "9428451": 450,
+                    "9478286": 450,
+                    "9478298": 450,
+                    "9478303": 450,
+                    "9478315": 450,
+                    "9479711": 440,
+                    "9521411": 390,
+                    "9594145": 400,
+                    "9748710": 500,
+                    "9837573": 500
+                },
+                "formula": "data['aux_engine1_max_load'] = None\nloads = []\nfor index, row in data.iterrows():\n\ttry:\n\t\tfound = False\n\t\tfor ship in state.keys():\n\t\t\tif row['imo'] == ship:\n\t\t\t\tloads.append(state[ship])\n\t\t\t\tfound = True\n\t\tif not found:\n\t\t\tloads.append(None)\n\texcept Exception as e:\n\t\tloads.append(None)\ndata['aux_engine1_max_load'] = loads",
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "aux_engine2_max_load",
+                "type": "number",
+                "options": [],
+                "state": {
+                    "9334404": 310,
+                    "9338735": 530,
+                    "9391127": 340,
+                    "9392183": 610,
+                    "9400708": 970,
+                    "9403918": 440,
+                    "9406582": 980,
+                    "9428449": 450,
+                    "9428451": 450,
+                    "9478286": 450,
+                    "9478298": 450,
+                    "9478303": 450,
+                    "9478315": 450,
+                    "9479711": 440,
+                    "9521411": 390,
+                    "9594145": 400,
+                    "9748710": 500,
+                    "9837573": 500
+                },
+                "formula": "data['aux_engine2_max_load'] = None\nloads = []\nfor index, row in data.iterrows():\n\ttry:\n\t\tfound = False\n\t\tfor ship in state.keys():\n\t\t\tif row['imo'] == ship:\n\t\t\t\tloads.append(state[ship])\n\t\t\t\tfound = True\n\t\tif not found:\n\t\t\tloads.append(None)\n\texcept Exception as e:\n\t\tloads.append(None)\ndata['aux_engine2_max_load'] = loads",
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "aux_engine3_max_load",
+                "type": "number",
+                "options": [],
+                "state": {
+                    "9334404": 310,
+                    "9338735": 530,
+                    "9391127": 340,
+                    "9392183": 610,
+                    "9400708": 970,
+                    "9403918": 440,
+                    "9406582": 970,
+                    "9428449": 450,
+                    "9428451": 440,
+                    "9478286": 450,
+                    "9478298": 450,
+                    "9478303": 450,
+                    "9478315": 450,
+                    "9479711": 440,
+                    "9521411": 390,
+                    "9594145": 400,
+                    "9748710": 500,
+                    "9837573": 500
+                },
+                "formula": "data['aux_engine3_max_load'] = None\nloads = []\nfor index, row in data.iterrows():\n\ttry:\n\t\tfound = False\n\t\tfor ship in state.keys():\n\t\t\tif row['imo'] == ship:\n\t\t\t\tloads.append(state[ship])\n\t\t\t\tfound = True\n\t\tif not found:\n\t\t\tloads.append(None)\n\texcept Exception as e:\n\t\tloads.append(None)\ndata['aux_engine3_max_load'] = loads",
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "aux_engine1_mcr_const",
+                "type": "number",
+                "options": [],
+                "state": {
+                    "9334404": 0.8,
+                    "9338735": 0.8,
+                    "9391127": 0.8,
+                    "9392183": 0.8,
+                    "9400708": 0.8,
+                    "9403918": 0.8,
+                    "9406582": 0.8,
+                    "9428449": 0.8,
+                    "9428451": 0.8,
+                    "9478286": 0.8,
+                    "9478298": 0.8,
+                    "9478303": 0.8,
+                    "9478315": 0.8,
+                    "9479711": 0.8,
+                    "9521411": 0.8,
+                    "9594145": 0.8,
+                    "9748710": 0.8,
+                    "9837573": 0.8
+                },
+                "formula": "data['aux_engine1_mcr_const'] = None\nconsts = []\nfor index, row in data.iterrows():\n\ttry:\n\t\tfound = False\n\t\tfor ship in state.keys():\n\t\t\tif row['imo'] == ship:\n\t\t\t\tconsts.append(state[ship])\n\t\t\t\tfound = True\n\t\tif not found:\n\t\t\tconsts.append(None)\n\texcept Exception as e:\n\t\tconsts.append(None)\ndata['aux_engine1_mcr_const'] = consts",
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "aux_engine2_mcr_const",
+                "type": "number",
+                "options": [],
+                "state": {
+                    "9334404": 0.8,
+                    "9338735": 0.8,
+                    "9391127": 0.8,
+                    "9392183": 0.8,
+                    "9400708": 0.8,
+                    "9403918": 0.8,
+                    "9406582": 0.8,
+                    "9428449": 0.8,
+                    "9428451": 0.8,
+                    "9478286": 0.8,
+                    "9478298": 0.8,
+                    "9478303": 0.8,
+                    "9478315": 0.8,
+                    "9479711": 0.8,
+                    "9521411": 0.8,
+                    "9594145": 0.8,
+                    "9748710": 0.8,
+                    "9837573": 0.8
+                },
+                "formula": "data['aux_engine2_mcr_const'] = None\nconsts = []\nfor index, row in data.iterrows():\n\ttry:\n\t\tfound = False\n\t\tfor ship in state.keys():\n\t\t\tif row['imo'] == ship:\n\t\t\t\tconsts.append(state[ship])\n\t\t\t\tfound = True\n\t\tif not found:\n\t\t\tconsts.append(None)\n\texcept Exception as e:\n\t\tconsts.append(None)\ndata['aux_engine2_mcr_const'] = consts",
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "aux_engine3_mcr_const",
+                "type": "number",
+                "options": [],
+                "state": {
+                    "9334404": 0.8,
+                    "9338735": 0.8,
+                    "9391127": 0.8,
+                    "9392183": 0.8,
+                    "9400708": 0.8,
+                    "9403918": 0.8,
+                    "9406582": 0.8,
+                    "9428449": 0.8,
+                    "9428451": 0.8,
+                    "9478286": 0.8,
+                    "9478298": 0.8,
+                    "9478303": 0.8,
+                    "9478315": 0.8,
+                    "9479711": 0.8,
+                    "9521411": 0.8,
+                    "9594145": 0.8,
+                    "9748710": 0.8,
+                    "9837573": 0.8
+                },
+                "formula": "data['aux_engine3_mcr_const'] = None\nconsts = []\nfor index, row in data.iterrows():\n\ttry:\n\t\tfound = False\n\t\tfor ship in state.keys():\n\t\t\tif row['imo'] == ship:\n\t\t\t\tconsts.append(state[ship])\n\t\t\t\tfound = True\n\t\tif not found:\n\t\t\tconsts.append(None)\n\texcept Exception as e:\n\t\tconsts.append(None)\ndata['aux_engine3_mcr_const'] = consts",
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "aeu_lower_threshold",
+                "type": "number",
+                "options": [],
+                "state": {
+                    "9334404": 90,
+                    "9338735": 85,
+                    "9391127": 55,
+                    "9392183": 75,
+                    "9400708": 65,
+                    "9403918": 90,
+                    "9406582": 90,
+                    "9428449": 50,
+                    "9428451": 90,
+                    "9478286": 90,
+                    "9478298": 75,
+                    "9478303": 90,
+                    "9478315": 55,
+                    "9479711": 75,
+                    "9521411": 90,
+                    "9594145": 90,
+                    "9748710": 80,
+                    "9837573": 80
+                },
+                "formula": "data['aeu_lower_threshold'] = None\nthresholds = []\nfor index, row in data.iterrows():\n\ttry:\n\t\tfound = False\n\t\tfor ship in state.keys():\n\t\t\tif row['imo'] == ship:\n\t\t\t\tthresholds.append(state[ship])\n\t\t\t\tfound = True\n\t\tif not found:\n\t\t\tthresholds.append(None)\n\texcept Exception as e:\n\t\tthresholds.append(None)\ndata['aeu_lower_threshold'] = thresholds",
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "emo_threshold",
+                "type": "number",
+                "options": [],
+                "state": {
+                    "9334404": 202.0,
+                    "9338735": 135.0,
+                    "9391127": 175.0,
+                    "9392183": 185.0,
+                    "9400708": 198.0,
+                    "9403918": 169.0,
+                    "9406582": 232.0,
+                    "9428449": 191.0,
+                    "9428451": 185.0,
+                    "9478286": 184.0,
+                    "9478298": 187.0,
+                    "9478303": 174.0,
+                    "9478315": 181.0,
+                    "9479711": 221.0,
+                    "9521411": 199.0,
+                    "9594145": 203.0,
+                    "9748710": 172.0,
+                    "9837573": 172.0
+                },
+                "formula": "data['emo_threshold'] = None\nthresholds = []\nfor index, row in data.iterrows():\n\ttry:\n\t\tfound = False\n\t\tfor ship in state.keys():\n\t\t\tif row['imo'] == ship:\n\t\t\t\tthresholds.append(state[ship])\n\t\t\t\tfound = True\n\t\tif not found:\n\t\t\tthresholds.append(None)\n\texcept Exception as e:\n\t\tthresholds.append(None)\ndata['emo_threshold'] = thresholds",
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "team_name",
+                "type": "string",
+                "options": [],
+                "state": {
+                    "9334404": "CHRNoTRIMTeam",
+                    "9338735": "CHRNoTRIMTeam",
+                    "9391127": "CHRNoTRIMTeam",
+                    "9392183": "CHRETTeam",
+                    "9400708": "CHRETTeam",
+                    "9403918": "CHRNoTRIMTeam",
+                    "9406582": "CHRETTeam",
+                    "9428449": "CHRDefaultTeam",
+                    "9428451": "CHRDefaultTeam",
+                    "9478286": "CHRDefaultTeam",
+                    "9478298": "CHRDefaultTeam",
+                    "9478303": "CHRDefaultTeam",
+                    "9478315": "CHRDefaultTeam",
+                    "9479711": "CHRETTeam",
+                    "9521411": "CHRETTeam",
+                    "9594145": "CHRETTeam",
+                    "9748710": "CHRETTeam",
+                    "9837573": "CHRETTeam"
+                },
+                "formula": "data['team_name'] = None\nteams = []\nfor index, row in data.iterrows():\n\ttry:\n\t\tfound = False\n\t\tfor ship in state.keys():\n\t\t\tif row['imo'] == ship:\n\t\t\t\tteams.append(state[ship])\n\t\t\t\tfound = True\n\t\tif not found:\n\t\t\tteams.append(None)\n\texcept Exception as e:\n\t\tteams.append(None)\ndata['team_name'] = teams",
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "vehicle_email_operator1",
+                "type": "string",
+                "options": [],
+                "state": {
+                    "9334404": "captain.susannetheresa@vsl.christiania-shipmanagement.com",
+                    "9338735": "ozdentheresa@miklagard-s.com",
+                    "9391127": "master@straitview.mycc.email",
+                    "9392183": "captain.sigridtheresa@vsl.christiania-shipmanagement.com",
+                    "9400708": "captain.charlottetheresa@vsl.christiania-shipmanagement.com",
+                    "9403918": "azratheresa@miklagard-s.com",
+                    "9406582": "captain.jettetheresa@vsl.christiania-shipmanagement.com",
+                    "9428449": "captain.carolinetheresa@vsl.christiania-shipmanagement.com",
+                    "9428451": "captain.karinatheresa@vsl.christiania-shipmanagement.com",
+                    "9478286": "captain.annelisetheresa@vsl.christiania-shipmanagement.com",
+                    "9478298": "captain.tinatheresa@vsl.christiania-shipmanagement.com",
+                    "9478303": "captain.alicetheresa@vsl.christiania-shipmanagement.com",
+                    "9478315": "captain.cathytheresa@vsl.christiania-shipmanagement.com",
+                    "9479711": "captain.likyatheresa@vsl.christiania-shipmanagement.com",
+                    "9521411": "captain.mayatheresa@vsl.christiania-shipmanagement.com",
+                    "9594145": "master.stellatheresa@suntechfleet.com",
+                    "9748710": "master.sigaiatheresa@suntech-fleet.com",
+                    "9837573": "master.juliatheresa@suntech-fleet.com"
+                },
+                "formula": "data['vehicle_email_operator1'] = None\nemails = []\nfor index, row in data.iterrows():\n\ttry:\n\t\tfound = False\n\t\tfor tug in state.keys():\n\t\t\tif row['imo'] == tug:\n\t\t\t\temails.append(state[tug])\n\t\t\t\tfound = True\n\t\tif not found:\n\t\t\temails.append(None)\n\texcept Exception as e:\n\t\temails.append(None)\ndata['vehicle_email_operator1'] = emails",
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            },
+            {
+                "name": "vehicle_email_operator2",
+                "type": "string",
+                "options": [],
+                "state": {
+                    "9334404": "susannetheresa@vsl.christiania-shipmanagement.com",
+                    "9338735": "ozdentheresa@miklagard-s.com",
+                    "9391127": "master@straitview.mycc.email",
+                    "9392183": "sigridtheresa@vsl.christiania-shipmanagement.com",
+                    "9400708": "charlottetheresa@vsl.christiania-shipmanagement.com",
+                    "9403918": "azratheresa@miklagard-s.com",
+                    "9406582": "jettetheresa@vsl.christiania-shipmanagement.com",
+                    "9428449": "carolinetheresa@vsl.christiania-shipmanagement.com",
+                    "9428451": "karinatheresa@vsl.christiania-shipmanagement.com",
+                    "9478286": "annelisetheresa@vsl.christiania-shipmanagement.com",
+                    "9478298": "tinatheresa@vsl.christiania-shipmanagement.com",
+                    "9478303": "alicetheresa@vsl.christiania-shipmanagement.com",
+                    "9478315": "cathytheresa@vsl.christiania-shipmanagement.com",
+                    "9479711": "likyatheresa@vsl.christiania-shipmanagement.com",
+                    "9521411": "mayatheresa@vsl.christiania-shipmanagement.com",
+                    "9594145": "master.stellatheresa@suntechfleet.com",
+                    "9748710": "master.sigaiatheresa@suntech-fleet.com",
+                    "9837573": "master.juliatheresa@suntech-fleet.com"
+                },
+                "formula": "data['vehicle_email_operator2'] = None\nemails = []\nfor index, row in data.iterrows():\n\ttry:\n\t\tfound = False\n\t\tfor tug in state.keys():\n\t\t\tif row['imo'] == tug:\n\t\t\t\temails.append(state[tug])\n\t\t\t\tfound = True\n\t\tif not found:\n\t\t\temails.append(None)\n\texcept Exception as e:\n\t\temails.append(None)\ndata['vehicle_email_operator2'] = emails",
+                "is_metadata": true,
+                "eventType": "SHIPPING"
+            }
+        ]
+    }
+}

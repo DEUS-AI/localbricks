@@ -1,0 +1,52 @@
+[tool.poetry]
+name = "deus_pipelines"
+version = "0.1.0"
+description = "wheel file based on Deusteam-pipeline_dev/src"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+package-mode = true
+packages = [
+    { include = "workflow_definition" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+annotated-types = "0.6.0"
+certifi = "2024.2.2"
+charset-normalizer = "3.3.2"
+click = "8.1.7"
+idna = "3.6"
+oauthlib = "3.2.2"
+prompt-toolkit = "3.0.43"
+pydantic = "2.6.4"
+pydantic_core = "2.16.3"
+PyJWT = "2.8.0"
+PyYAML = "6.0.1"
+setuptools = "69.2.0"
+typer = "0.9.0"
+typing_extensions = "4.10.0"
+urllib3 = "2.2.1"
+wcwidth = "0.2.13"
+wheel = "0.43.0"
+pyspark = "3.5.1"
+boto3 = "1.34.110"
+gitpython = "^3.1.43"
+great-expectations = "0.18.8"
+pytest = "^8.2.2"
+pyarrow = "^16.1.0"
+fuzzywuzzy = "^0.18.0"
+scipy = "^1.14.0"
+
+[tool.poetry.group.dev.dependencies]
+cibuildwheel = "^2.19.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0", "cibuildwheel"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.poetry.group.build.dependencies]
+setuptools = "^69.2.0"
+wheel = "^0.43.0"

@@ -1,0 +1,76 @@
+customer_code: VS
+industry: AVIATION
+landing:
+  ingestion:
+    name: "ingestion"
+    jobs:
+      raw_data:
+        name: "raw_data"
+        tasks:
+          raw_data_task:
+            description: 'CSV Data from virgin atlantic'
+            file_pattern:
+              name_regex: '*.csv'
+              min_size_bytes: 1
+              format: 'csv'
+            compression: "false"
+          custom_task:
+            name: "custom_task"
+            description: "A custom task for testing"
+            python_file: "tests/test_data/custom_task.py"
+            parameters:
+              param1: value1
+              param2: value2
+  cleaning:
+    name: "cleaning"
+    jobs:
+      raw_data:
+        name: "cleaning_raw_data"
+        tasks:
+          raw_data_task:
+            description: 'CSV Data from virgin atlantic'
+            file_pattern:
+              name_regex: '*.csv'
+              min_size_bytes: 1
+              format: 'csv'
+            compression: "false"
+bronze:
+  processing:
+    name: "processing"
+    jobs:
+      Flight_Plans:
+        name: "Flight_Plans"
+        tasks:
+          flight_plans_task:
+            file_parser:
+              args:
+                skipRows: 0
+                header: 'true'
+            output_table_name: flight_data${var.tables_suffix}
+      Fuel_Burn:
+        name: "Fuel_Burn"
+        tasks:
+          fuel_burn_task:
+            file_parser:
+              args:
+                skipRows: 0
+                header: 'true'
+            output_table_name: fuelburn_data${var.tables_suffix}
+silver:
+  analysis:
+    name: "analysis"
+    jobs:
+      some_task:
+        name: "silver_task"
+        tasks:
+          silver_task:
+            output_table_name: 'TBD'
+gold:
+  reporting:
+    name: "reporting"
+    jobs:
+      some_task:
+        name: "gold_task"
+        tasks:
+          gold_task:
+            output_table_name: 'TBD'

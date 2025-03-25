@@ -1,0 +1,89 @@
+customer_code: CLIENT
+industry: INDUSTRY
+landing:
+  ingestion:
+    tasks:
+      raw_data_task:
+        name: "raw_data_task"
+        description: "Generic data ingestion task"
+        file_pattern:
+          name: "raw_data"
+          name_regex: "*.csv"
+          min_size_bytes: 1
+          format: "csv"
+        compression: "false"
+        python_file: "../src/tasks/landing/landing_task.py"
+        parameters:
+          start_date: "${var.start_date}"
+          end_date: "${var.end_date}"
+        depends_on: []
+bronze:
+  processing:
+    tasks:
+      data_source_1_task:
+        name: "data_source_1_task"
+        description: "Process data source 1"
+        file_pattern:
+          name: "source1"
+          name_regex: "source1_*.csv"
+          min_size_bytes: 1
+          format: "csv"
+        compression: "false"
+        python_file: "../src/tasks/bronze/bronze_file_ingestion.py"
+        parameters:
+          file_parser:
+            args:
+              skipRows: 0
+              header: "true"
+          output_table_name: source1_data${var.tables_suffix}
+        depends_on: []
+      data_source_2_task:
+        name: "data_source_2_task"
+        description: "Process data source 2"
+        file_pattern:
+          name: "source2"
+          name_regex: "source2_*.csv"
+          min_size_bytes: 1
+          format: "csv"
+        compression: "false"
+        python_file: "../src/tasks/bronze/bronze_file_ingestion.py"
+        parameters:
+          file_parser:
+            args:
+              skipRows: 0
+              header: "true"
+          output_table_name: source2_data${var.tables_suffix}
+        depends_on: []
+      data_expectations_task:
+        name: "data_expectations_task"
+        description: "Data quality expectations task"
+        python_file: "../src/tasks/bronze/data_expectations.py"
+        parameters:
+          file_parser:
+            args:
+              skipRows: 0
+              header: "true"
+          output_table_name: validated_data${var.tables_suffix}
+        depends_on: ["data_source_1_task", "data_source_2_task"]
+silver:
+  analysis:
+    tasks:
+      silver_task:
+        name: "silver_task"
+        description: "Silver layer transformation task"
+        python_file: "../src/tasks/silver/analysis.py"
+        parameters:
+          start_date: "${var.start_date}"
+          end_date: "${var.end_date}"
+        depends_on: []
+gold:
+  reporting:
+    tasks:
+      gold_task:
+        name: "gold_task"
+        description: "Gold layer aggregation task"
+        python_file: "../src/tasks/gold/reporting.py"
+        parameters:
+          start_date: "${var.start_date}"
+          end_date: "${var.end_date}"
+        depends_on: []

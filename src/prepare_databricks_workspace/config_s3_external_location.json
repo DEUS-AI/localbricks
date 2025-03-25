@@ -1,0 +1,37 @@
+[
+  {
+    "client_code": "VS",
+    "industry": "aviation",
+    "s3_bucket": "s3://deus-data-pipeline.{{WS_ENV}}.{{CLIENT_CODE}}/original-uploads/"
+  },
+  {
+    "client_code": "TUI",
+    "industry": "aviation",
+    "s3_bucket": "s3://deus-data-pipeline.{{WS_ENV}}.{{CLIENT_CODE}}/original-uploads/"
+  },
+  {
+    "client_code": "ST",
+    "industry": "maritime",
+    "s3_bucket": "s3://deus-data-pipeline.{{WS_ENV}}.{{CLIENT_CODE}}/original-uploads/"
+  },
+  {
+    "client_code": "CGL",
+    "industry": "maritime",
+    "s3_bucket": "s3://deus-data-pipeline.{{WS_ENV}}.{{CLIENT_CODE}}/original-uploads/"
+  },
+  {
+    "client_code": "PGA",
+    "industry": "maritime",
+    "s3_bucket": "s3://deus-data-pipeline.{{WS_ENV}}.{{CLIENT_CODE}}/original-uploads/"
+  },
+  {
+    "client_code": "LDC",
+    "industry": "maritime",
+    "s3_bucket": "s3://deus-data-pipeline.{{WS_ENV}}.{{CLIENT_CODE}}/original-uploads/"
+  },
+  {
+    "client_code": "CHR",
+    "industry": "maritime",
+    "s3_bucket": "s3://deus-data-pipeline.{{WS_ENV}}.{{CLIENT_CODE}}/original-uploads/"
+  }
+]

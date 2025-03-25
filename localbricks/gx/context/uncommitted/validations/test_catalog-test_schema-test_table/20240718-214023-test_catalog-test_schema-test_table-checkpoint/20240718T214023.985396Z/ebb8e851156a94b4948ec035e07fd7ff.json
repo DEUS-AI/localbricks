@@ -1,0 +1,210 @@
+{
+  "evaluation_parameters": {},
+  "meta": {
+    "active_batch_definition": {
+      "batch_identifiers": {
+        "catalog": "test_catalog",
+        "schema": "test_schema",
+        "table": "test_table",
+        "timestamp": "2024-07-18 22:40:07"
+      },
+      "data_asset_name": "test_industry-test_catalog-test_schema-test_table",
+      "data_connector_name": "test_industry-test_catalog-test_schema-test_table-data_connector",
+      "datasource_name": "test_industry-test_catalog-test_schema-test_table-datasource"
+    },
+    "batch_markers": {
+      "ge_load_time": "20240718T214023.989908Z"
+    },
+    "batch_spec": {
+      "batch_data": "SparkDataFrame",
+      "data_asset_name": "test_industry-test_catalog-test_schema-test_table"
+    },
+    "checkpoint_id": null,
+    "checkpoint_name": "test_catalog-test_schema-test_table-checkpoint",
+    "expectation_suite_name": "test_catalog-test_schema-test_table",
+    "great_expectations_version": "0.18.8",
+    "run_id": {
+      "run_name": "20240718-214023-test_catalog-test_schema-test_table-checkpoint",
+      "run_time": "2024-07-18T21:40:23.985396+00:00"
+    },
+    "validation_id": null,
+    "validation_time": "20240718T214023.997841Z"
+  },
+  "results": [
+    {
+      "exception_info": {
+        "exception_message": null,
+        "exception_traceback": null,
+        "raised_exception": false
+      },
+      "expectation_config": {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "batch_id": "ebb8e851156a94b4948ec035e07fd7ff",
+          "column": "aircraftOwner",
+          "type_": "StringType"
+        },
+        "meta": {}
+      },
+      "meta": {},
+      "result": {
+        "observed_value": "StringType"
+      },
+      "success": true
+    },
+    {
+      "exception_info": {
+        "exception_message": null,
+        "exception_traceback": null,
+        "raised_exception": false
+      },
+      "expectation_config": {
+        "expectation_type": "expect_column_values_to_match_regex",
+        "kwargs": {
+          "batch_id": "ebb8e851156a94b4948ec035e07fd7ff",
+          "column": "ingestion_job_run_id",
+          "regex": "^[a-zA-Z ]*$"
+        },
+        "meta": {
+          "critical": true
+        }
+      },
+      "meta": {},
+      "result": {
+        "element_count": 10,
+        "missing_count": 0,
+        "missing_percent": 0.0,
+        "partial_unexpected_counts": [
+          {
+            "count": 10,
+            "value": "916697480118848"
+          }
+        ],
+        "partial_unexpected_index_list": [
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          }
+        ],
+        "partial_unexpected_list": [
+          "916697480118848",
+          "916697480118848",
+          "916697480118848",
+          "916697480118848",
+          "916697480118848",
+          "916697480118848",
+          "916697480118848",
+          "916697480118848",
+          "916697480118848",
+          "916697480118848"
+        ],
+        "unexpected_count": 10,
+        "unexpected_index_column_names": [
+          "source_file_name"
+        ],
+        "unexpected_index_list": [
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          },
+          {
+            "ingestion_job_run_id": "916697480118848",
+            "source_file_name": "actual_flights_data_1708885970.json"
+          }
+        ],
+        "unexpected_index_query": "df.filter(F.expr((ingestion_job_run_id IS NOT NULL) AND (NOT RLIKE(ingestion_job_run_id, ^[a-zA-Z ]*$))))",
+        "unexpected_list": [
+          "916697480118848",
+          "916697480118848",
+          "916697480118848",
+          "916697480118848",
+          "916697480118848",
+          "916697480118848",
+          "916697480118848",
+          "916697480118848",
+          "916697480118848",
+          "916697480118848"
+        ],
+        "unexpected_percent": 100.0,
+        "unexpected_percent_nonmissing": 100.0,
+        "unexpected_percent_total": 100.0
+      },
+      "success": false
+    }
+  ],
+  "statistics": {
+    "evaluated_expectations": 2,
+    "success_percent": 50.0,
+    "successful_expectations": 1,
+    "unsuccessful_expectations": 1
+  },
+  "success": false
+}

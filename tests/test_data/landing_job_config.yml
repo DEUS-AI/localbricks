@@ -1,0 +1,22 @@
+customer_code: VS
+industry: AVIATION
+landing:
+  ingestion:
+    name: "ingestion"
+    jobs:
+      raw_data:
+        name: "raw_data"
+        tasks:
+          raw_data_task:
+            name: "raw_data_task"
+            description: "CSV Data from virgin atlantic"
+            file_pattern:
+              name_regex: "*.csv"
+              min_size_bytes: 1
+              format: "csv"
+            compression: "false"
+            python_file: "../src/tasks/landing/csv_loading_path.py"
+            parameters:
+              param1: value1
+              param2: value2
+            depends_on: []

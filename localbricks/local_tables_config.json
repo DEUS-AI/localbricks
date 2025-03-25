@@ -1,0 +1,34 @@
+[
+    {
+      "share": "localbricks",
+      "schema.table_name": "client-tui.flight_plan_data__joao_test2"
+    },
+    {
+      "share": "test_joao_2",
+      "schema.table_name": "client-tui.flight_plan_data__joao_test2"
+    },
+    {
+      "share": "pablo_local_dev",
+      "schema.table_name": "client-tui.reconciliation_temp_flight_plan_data"
+    },
+    {
+      "share": "pablo_local_dev",
+      "schema.table_name": "client-vs.flight_data"
+    },
+    {
+      "share": "pablo_local_dev",
+      "schema.table_name": "client-vs.fuelburn_data"
+    },
+    {
+      "share": "pablo_local_dev",
+      "schema.table_name": "client-chr.beacon52"
+    },
+    {
+      "share": "pablo_local_dev",
+      "schema.table_name": "client-chr.crew_rotation"
+    },
+    {
+      "share": "pablo_local_dev",
+      "schema.table_name": "client-chr.stormgeo_api_data"
+    }
+]

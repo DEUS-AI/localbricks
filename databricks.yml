@@ -1,0 +1,60 @@
+yaml-language-server: $schema=bundle_config_schema.json
+
+# YAML schema: https://docs.databricks.com/en/dev-tools/bundles/settings.html#overview
+bundle:
+  name: deus_medallion_lakehouse
+  git:
+    origin_url: https://github.com/Deusteam/Deusteam-pipeline_dev.git # TODO: rename git repo to "deus-databricks-pipeline"
+    branch: main # this will be automatically filled by deployment command
+
+variables:
+  job_prefix:
+    description: A unifying prefix for this bundle's job and task names.
+    default: deus-dab
+  bundle_branch:
+    description: This is gonna be replaced automatically by "make deploy" command.
+    default: 'dev'
+  tables_suffix:
+    description: A personal suffix to append to catalog schema tables (recommended to be used in DEV mode for testing purposes).
+    default: ''
+  spark_runtime_version:
+    description: The cluster's Spark version ID.
+    default: 14.3.x-scala2.12
+  deus_lib_package_version:
+    description: The deus commons lib.
+    default: '' # this will be automatically filled by deployment command
+
+sync:
+  exclude:
+    - ./deus_lib
+  include:
+    - ./dist
+
+include:
+  # jobs, tasks, etc...
+  - resources/*.yml
+
+targets:
+  # Used for DEV purposes (https://docs.databricks.com/en/dev-tools/bundles/deployment-modes.html#development-mode)
+  dev:
+    mode: development
+    default: true
+    variables:
+      tables_suffix: '__dev_${workspace.current_user.userName}'
+    compute_id: '0514-085728-3wb36vbh'
+    workspace:
+      host: https://dbc-5000cb91-5c76.cloud.databricks.com
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}/branches/${var.bundle_branch}
+
+  # Used for PROD deployment (https://docs.databricks.com/en/dev-tools/bundles/deployment-modes.html#production-mode)
+  prod:
+    mode: production 
+    workspace:
+      host: https://dbc-43b93eb6-6c65.cloud.databricks.com/
+      root_path: /Workspace/Shared/.bundle/${bundle.name}/${bundle.target}/branches/${var.bundle_branch}
+    run_as:
+      # This runs as "someone@example.com" in production. 
+      # Alternatively, a service principal could be used here using service_principal_name
+      # https://docs.databricks.com/en/administration-guide/users-groups/service-principals.html#assign-a-service-principal-to-a-workspace-using-the-account-console
+      user_name: ${workspace.current_user.userName}
+

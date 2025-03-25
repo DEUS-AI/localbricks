@@ -1,0 +1,18 @@
+job_cluster_key: deus_B2B_jobs_cluster # this cluster will be used by all job's tasks
+new_cluster:
+  cluster_name: '' # custom display name
+  spark_version: '${var.spark_runtime_version}'
+  aws_attributes:
+    first_on_demand: 1
+    availability: SPOT_WITH_FALLBACK
+    zone_id: auto
+    spot_bid_price_percent: 100
+    ebs_volume_count: 0
+  node_type_id: m6i.2xlarge
+  enable_elastic_disk: true
+  policy_id: 001A775F9CF99795
+  data_security_mode: USER_ISOLATION
+  runtime_engine: PHOTON
+  autoscale:
+    min_workers: 1
+    max_workers: 8

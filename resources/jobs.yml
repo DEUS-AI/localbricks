@@ -1,0 +1,883 @@
+resources:
+  jobs:
+    prod_deus_MARITIME_ST_landing_job_main_branch:
+      name: prod_deus_MARITIME_ST_landing_job_main_branch
+      parameters:
+      - name: customer_code
+        default: ST
+      - name: ingest_start_datetime
+        default: 2010-01-01 17:21
+      - name: ingest_end_datetime
+        default: now
+      - name: industry
+        default: maritime
+      - name: ws_env
+        default: prod
+      job_clusters:
+      - &id001
+        job_cluster_key: deus_B2B_jobs_cluster
+        new_cluster:
+          cluster_name: ''
+          spark_version: ${var.spark_runtime_version}
+          aws_attributes:
+            first_on_demand: 1
+            availability: SPOT_WITH_FALLBACK
+            zone_id: auto
+            spot_bid_price_percent: 100
+            ebs_volume_count: 0
+          node_type_id: m6i.2xlarge
+          enable_elastic_disk: true
+          policy_id: 001A775F9CF99795
+          data_security_mode: USER_ISOLATION
+          runtime_engine: PHOTON
+          autoscale:
+            min_workers: 1
+            max_workers: 8
+      email_notifications:
+        on_failure: ${workspace.current_user.userName}
+      tasks:
+      - task_key: raw_csv_data_task
+        description: CSV Data from st
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/landing/landing_task.py
+          parameters:
+          - '{"client_settings": {"description": "CSV Data from st", "compression":
+            false, "file_type": "csv", "file_pattern": {"name": ".*\\\\.csv$", "min_size_bytes":
+            1}}, "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code":
+            "{{job.parameters.`customer_code`}}", "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}", "load_type": "incremental"}'
+        libraries: &id002
+        - whl: ${workspace.root_path}/files/dist/deus_lib-0.1.0-202407221549-py3-none-any.whl
+        - pypi:
+            package: great_expectations==0.18.8
+        - pypi:
+            package: pydantic==2.6.4
+        - pypi:
+            package: pyyaml==6.0.1
+        depends_on: []
+    prod_deus_MARITIME_ST_bronze_job_main_branch:
+      name: prod_deus_MARITIME_ST_bronze_job_main_branch
+      parameters:
+      - name: customer_code
+        default: ST
+      - name: ingest_start_datetime
+        default: 2010-01-01 17:21
+      - name: ingest_end_datetime
+        default: now
+      - name: industry
+        default: maritime
+      - name: ws_env
+        default: prod
+      job_clusters:
+      - *id001
+      email_notifications:
+        on_failure: ${workspace.current_user.userName}
+      tasks:
+      - task_key: blob_noon_report_task
+        description: Noon reports from st
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Noon reports from st", "compression":
+            false, "file_type": "csv", "file_pattern": {"name": "^blob_NoonReport_.*\\.csv$",
+            "min_size_bytes": 0}, "file_parser": {"args": {"skipRows": 0, "header":
+            "true", "sep": ",/;"}}, "output_table_name": "blob_noon_report${var.tables_suffix}"},
+            "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: blob_optimal_engine_task
+        description: Engine csv data from st
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Engine csv data from st", "compression":
+            false, "file_type": "csv", "file_pattern": {"name": "^blob_Optimal_Engine_.*\\.csv$",
+            "min_size_bytes": 0}, "file_parser": {"args": {"skipRows": 0, "header":
+            "true", "sep": ",/;"}}, "output_table_name": "blob_optimal_engine${var.tables_suffix}"},
+            "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: blob_fuel_consumption_task
+        description: Manually inserted csv crew data
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Manually inserted csv crew data",
+            "compression": false, "file_type": "csv", "file_pattern": {"name": "^blob_FuelConsumption_.*\\.csv$",
+            "min_size_bytes": 0}, "file_parser": {"args": {"skipRows": 0, "header":
+            "true", "sep": ",/;"}}, "output_table_name": "blob_fuel_consumption${var.tables_suffix}"},
+            "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}"}'
+        libraries: *id002
+        depends_on: []
+    prod_deus_MARITIME_CGL_landing_job_main_branch:
+      name: prod_deus_MARITIME_CGL_landing_job_main_branch
+      parameters:
+      - name: customer_code
+        default: CGL
+      - name: ingest_start_datetime
+        default: 2010-01-01 17:21
+      - name: ingest_end_datetime
+        default: now
+      - name: industry
+        default: maritime
+      - name: ws_env
+        default: prod
+      job_clusters:
+      - *id001
+      email_notifications:
+        on_failure: ${workspace.current_user.userName}
+      tasks:
+      - task_key: raw_json_data_task
+        description: JSON Data from cgl
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/landing/landing_task.py
+          parameters:
+          - '{"client_settings": {"description": "JSON Data from cgl", "compression":
+            false, "file_type": "json", "file_pattern": {"name": ".*\\\\.json$", "min_size_bytes":
+            1}}, "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code":
+            "{{job.parameters.`customer_code`}}", "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}", "load_type": "incremental"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: raw_csv_data_task
+        description: CSV Data from cgl
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/landing/landing_task.py
+          parameters:
+          - '{"client_settings": {"description": "CSV Data from cgl", "compression":
+            false, "file_type": "csv", "file_pattern": {"name": ".*\\\\.csv$", "min_size_bytes":
+            1}}, "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code":
+            "{{job.parameters.`customer_code`}}", "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}", "load_type": "incremental"}'
+        libraries: *id002
+        depends_on: []
+    prod_deus_MARITIME_CGL_bronze_job_main_branch:
+      name: prod_deus_MARITIME_CGL_bronze_job_main_branch
+      parameters:
+      - name: customer_code
+        default: CGL
+      - name: ingest_start_datetime
+        default: 2010-01-01 17:21
+      - name: ingest_end_datetime
+        default: now
+      - name: industry
+        default: maritime
+      - name: ws_env
+        default: prod
+      job_clusters:
+      - *id001
+      email_notifications:
+        on_failure: ${workspace.current_user.userName}
+      tasks:
+      - task_key: mariapps_task
+        description: Noon reports from mariapps
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Noon reports from mariapps", "compression":
+            false, "file_type": "json", "file_pattern": {"name": "^mariapps_.*\\.json$",
+            "min_size_bytes": 0}, "file_parser": {"args": {"multiline": "true", "header":
+            "true"}}, "output_table_name": "mariapps${var.tables_suffix}"}, "job_run_id":
+            "{{job.run_id}}", "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: crew_data_task
+        description: Manually inserted csv crew data
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Manually inserted csv crew data",
+            "compression": false, "file_type": "csv", "file_pattern": {"name": ".*\\\\.csv$",
+            "min_size_bytes": 0}, "file_parser": {"args": {"skipRows": 0, "header":
+            "true"}}, "output_table_name": "crew_data${var.tables_suffix}"}, "job_run_id":
+            "{{job.run_id}}", "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: merge_for_silver_task
+        description: Complete bronze task for silver
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/merge_data_task.py
+          parameters:
+          - '{"client_settings": {"description": "Complete bronze task for silver",
+            "compression": false, "file_type": "merge"}, "job_run_id": "{{job.run_id}}",
+            "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}"}'
+        libraries: *id002
+        depends_on:
+        - task_key: crew_data_task
+        - task_key: mariapps_task
+    prod_deus_MARITIME_PGA_landing_job_main_branch:
+      name: prod_deus_MARITIME_PGA_landing_job_main_branch
+      parameters:
+      - name: customer_code
+        default: PGA
+      - name: ingest_start_datetime
+        default: 2010-01-01 17:21
+      - name: ingest_end_datetime
+        default: now
+      - name: industry
+        default: maritime
+      - name: ws_env
+        default: prod
+      job_clusters:
+      - *id001
+      email_notifications:
+        on_failure: ${workspace.current_user.userName}
+      tasks:
+      - task_key: raw_json_data_task
+        description: JSON Data from pga
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/landing/landing_task.py
+          parameters:
+          - '{"client_settings": {"description": "JSON Data from pga", "compression":
+            false, "file_type": "json", "file_pattern": {"name": ".*\\\\.json$", "min_size_bytes":
+            1}}, "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code":
+            "{{job.parameters.`customer_code`}}", "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}", "load_type": "incremental"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: raw_csv_data_task
+        description: CSV Data from pga
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/landing/landing_task.py
+          parameters:
+          - '{"client_settings": {"description": "CSV Data from pga", "compression":
+            false, "file_type": "csv", "file_pattern": {"name": ".*\\\\.csv$", "min_size_bytes":
+            1}}, "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code":
+            "{{job.parameters.`customer_code`}}", "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}", "load_type": "incremental"}'
+        libraries: *id002
+        depends_on: []
+    prod_deus_MARITIME_PGA_bronze_job_main_branch:
+      name: prod_deus_MARITIME_PGA_bronze_job_main_branch
+      parameters:
+      - name: customer_code
+        default: PGA
+      - name: ingest_start_datetime
+        default: 2010-01-01 17:21
+      - name: ingest_end_datetime
+        default: now
+      - name: industry
+        default: maritime
+      - name: ws_env
+        default: prod
+      job_clusters:
+      - *id001
+      email_notifications:
+        on_failure: ${workspace.current_user.userName}
+      tasks:
+      - task_key: mariapps_task
+        description: Noon reports from mariapps
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Noon reports from mariapps", "compression":
+            false, "file_type": "json", "file_pattern": {"name": "^mariapps_.*\\.json$",
+            "min_size_bytes": 0}, "file_parser": {"args": {"multiline": "true", "header":
+            "true"}}, "output_table_name": "mariapps${var.tables_suffix}"}, "job_run_id":
+            "{{job.run_id}}", "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: crew_data_task
+        description: Manually inserted csv crew data
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Manually inserted csv crew data",
+            "compression": false, "file_type": "csv", "file_pattern": {"name": ".*\\\\.csv$",
+            "min_size_bytes": 0}, "file_parser": {"args": {"skipRows": 0, "header":
+            "true"}}, "output_table_name": "crew_data${var.tables_suffix}"}, "job_run_id":
+            "{{job.run_id}}", "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}"}'
+        libraries: *id002
+        depends_on: []
+    prod_deus_MARITIME_CHR_landing_job_main_branch:
+      name: prod_deus_MARITIME_CHR_landing_job_main_branch
+      parameters:
+      - name: customer_code
+        default: CHR
+      - name: ingest_start_datetime
+        default: 2010-01-01 17:21
+      - name: ingest_end_datetime
+        default: now
+      - name: industry
+        default: maritime
+      - name: ws_env
+        default: prod
+      job_clusters:
+      - *id001
+      email_notifications:
+        on_failure: ${workspace.current_user.userName}
+      tasks:
+      - task_key: raw_json_data_task
+        description: JSON Data from chr
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/landing/landing_task.py
+          parameters:
+          - '{"client_settings": {"description": "JSON Data from chr", "compression":
+            false, "file_type": "json", "file_pattern": {"name": ".*\\\\.json$", "min_size_bytes":
+            1}}, "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code":
+            "{{job.parameters.`customer_code`}}", "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}", "load_type": "incremental"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: raw_csv_data_task
+        description: CSV Data from chr
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/landing/landing_task.py
+          parameters:
+          - '{"client_settings": {"description": "CSV Data from chr", "compression":
+            false, "file_type": "csv", "file_pattern": {"name": ".*\\\\.csv$", "min_size_bytes":
+            1}}, "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code":
+            "{{job.parameters.`customer_code`}}", "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}", "load_type": "incremental"}'
+        libraries: *id002
+        depends_on: []
+    prod_deus_MARITIME_CHR_bronze_job_main_branch:
+      name: prod_deus_MARITIME_CHR_bronze_job_main_branch
+      parameters:
+      - name: customer_code
+        default: CHR
+      - name: ingest_start_datetime
+        default: 2010-01-01 17:21
+      - name: ingest_end_datetime
+        default: now
+      - name: industry
+        default: maritime
+      - name: ws_env
+        default: prod
+      job_clusters:
+      - *id001
+      email_notifications:
+        on_failure: ${workspace.current_user.userName}
+      tasks:
+      - task_key: stormgeo_api_data_task
+        description: Noon reports from chr
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Noon reports from chr", "compression":
+            false, "file_type": "json", "file_pattern": {"name": "^stormgeo_api_data_.*\\.json$",
+            "min_size_bytes": 0}, "file_parser": {"args": {"multiline": "true", "header":
+            "true"}}, "output_table_name": "stormgeo_api_data${var.tables_suffix}"},
+            "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: beacon52_task
+        description: Csv beacon52 data
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Csv beacon52 data", "compression":
+            false, "file_type": "csv", "file_pattern": {"name": "^data_beacon52.*\\.csv$",
+            "min_size_bytes": 0}, "file_parser": {"args": {"skipRows": 0, "header":
+            "true"}}, "output_table_name": "beacon52${var.tables_suffix}"}, "job_run_id":
+            "{{job.run_id}}", "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: crew_rotation_task
+        description: Csv crew_rotation data
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Csv crew_rotation data", "compression":
+            false, "file_type": "csv", "file_pattern": {"name": "^crew_rotation.*\\.csv$",
+            "min_size_bytes": 0}, "file_parser": {"args": {"skipRows": 0, "header":
+            "true"}}, "output_table_name": "crew_rotation${var.tables_suffix}"}, "job_run_id":
+            "{{job.run_id}}", "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: data_expectations_task
+        description: Data expectations task
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/data_expectations.py
+          parameters:
+          - '{"client_settings": {"description": "Data expectations task", "compression":
+            false}, "job_run_id": "{{job.run_id}}", "ws_env": "prod", "output_table_name":
+            "flight_data${var.tables_suffix}"}'
+        libraries: *id002
+        depends_on:
+        - task_key: crew_rotation_task
+        - task_key: beacon52_task
+        - task_key: stormgeo_api_data_task
+      - task_key: merge_for_silver_task
+        description: Complete bronze task for silver
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/merge_data_task.py
+          parameters:
+          - '{"client_settings": {"description": "Complete bronze task for silver",
+            "compression": false, "file_type": "merge"}, "job_run_id": "{{job.run_id}}",
+            "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}"}'
+        libraries: *id002
+        depends_on:
+        - task_key: data_expectations_task
+    prod_deus_aviation_VS_landing_job_main_branch:
+      name: prod_deus_aviation_VS_landing_job_main_branch
+      parameters:
+      - name: customer_code
+        default: VS
+      - name: ingest_start_datetime
+        default: 2010-01-01 17:21
+      - name: ingest_end_datetime
+        default: now
+      - name: industry
+        default: aviation
+      - name: ws_env
+        default: prod
+      job_clusters:
+      - *id001
+      email_notifications:
+        on_failure: ${workspace.current_user.userName}
+      tasks:
+      - task_key: raw_data_task
+        description: CSV Data from virgin atlantic
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/landing/landing_task.py
+          parameters:
+          - '{"client_settings": {"description": "CSV Data from virgin atlantic",
+            "compression": false, "file_type": "csv", "file_pattern": {"name": ".*\\\\.csv$",
+            "min_size_bytes": 1}}, "job_run_id": "{{job.run_id}}", "ws_env": "prod",
+            "customer_code": "{{job.parameters.`customer_code`}}", "ingest_start_datetime":
+            "{{job.parameters.`ingest_start_datetime`}}", "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}",
+            "industry": "{{job.parameters.`industry`}}", "load_type": "full"}'
+        libraries: *id002
+        depends_on: []
+    prod_deus_aviation_VS_bronze_job_main_branch:
+      name: prod_deus_aviation_VS_bronze_job_main_branch
+      parameters:
+      - name: customer_code
+        default: VS
+      - name: ingest_start_datetime
+        default: 2010-01-01 17:21
+      - name: ingest_end_datetime
+        default: now
+      - name: industry
+        default: aviation
+      - name: ws_env
+        default: prod
+      job_clusters:
+      - *id001
+      email_notifications:
+        on_failure: ${workspace.current_user.userName}
+      tasks:
+      - task_key: flight_plans_task
+        description: Ingestion of flight plans CSV
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Ingestion of flight plans CSV",
+            "compression": false, "file_type": "csv", "file_pattern": {"name": "^VS_Deus_Daily_[0-9]{8}\\.csv$",
+            "min_size_bytes": 0}, "file_parser": {"args": {"skipRows": 0, "header":
+            "true"}}, "output_table_name": "flight_data${var.tables_suffix}"}, "job_run_id":
+            "{{job.run_id}}", "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: fuel_burn_task
+        description: Ingestion of fuel burn CSV
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Ingestion of fuel burn CSV", "compression":
+            false, "file_type": "csv", "file_pattern": {"name": "^Fuel_Mon.*\\.csv$",
+            "min_size_bytes": 0}, "file_parser": {"args": {"skipRows": 1, "header":
+            "true", "header_line": 1}}, "output_table_name": "fuelburn_data${var.tables_suffix}"},
+            "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: data_expectations_task
+        description: Data expectations task
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/data_expectations.py
+          parameters:
+          - '{"client_settings": {"description": "Data expectations task", "compression":
+            false}, "job_run_id": "{{job.run_id}}", "ws_env": "prod", "output_table_name":
+            "flight_data${var.tables_suffix}"}'
+        libraries: *id002
+        depends_on:
+        - task_key: flight_plans_task
+        - task_key: fuel_burn_task
+      - task_key: merge_for_silver_task
+        description: Complete bronze task for silver
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/merge_data_task.py
+          parameters:
+          - '{"client_settings": {"description": "Complete bronze task for silver",
+            "compression": false, "file_type": "merge"}, "job_run_id": "{{job.run_id}}",
+            "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}"}'
+        libraries: *id002
+        depends_on:
+        - task_key: data_expectations_task
+    prod_deus_aviation_VS_silver_job_main_branch:
+      name: prod_deus_aviation_VS_silver_job_main_branch
+      parameters:
+      - name: customer_code
+        default: VS
+      - name: ws_env
+        default: prod
+      job_clusters:
+      - *id001
+      email_notifications:
+        on_failure: ${workspace.current_user.userName}
+      tasks:
+      - task_key: silver_task_build_model
+        description: Silver Build model
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/silver/create_ctas_task.py
+          parameters:
+          - '{"client_settings": {"description": "Silver Build model", "compression":
+            false}, "job_run_id": "{{job.run_id}}", "ws_env": "prod"}'
+        libraries: *id002
+        depends_on: []
+    prod_deus_aviation_VS_gold_job_main_branch:
+      name: prod_deus_aviation_VS_gold_job_main_branch
+      parameters:
+      - name: customer_code
+        default: VS
+      - name: ws_env
+        default: prod
+      job_clusters:
+      - *id001
+      email_notifications:
+        on_failure: ${workspace.current_user.userName}
+      tasks:
+      - task_key: gold_task
+        description: Gold reporting task
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/golden/generate_obt.py
+          parameters:
+          - '{"client_settings": {"description": "Gold reporting task", "compression":
+            false}, "job_run_id": "{{job.run_id}}", "ws_env": "prod"}'
+        libraries: *id002
+        depends_on: []
+    prod_deus_AVIATION_TUI_landing_job_main_branch:
+      name: prod_deus_AVIATION_TUI_landing_job_main_branch
+      parameters:
+      - name: customer_code
+        default: TUI
+      - name: ingest_start_datetime
+        default: 2010-01-01 17:21
+      - name: ingest_end_datetime
+        default: now
+      - name: ws_env
+        default: prod
+      job_clusters:
+      - *id001
+      email_notifications:
+        on_failure: ${workspace.current_user.userName}
+      tasks:
+      - task_key: raw_data_xml_task
+        description: XML Data from TUI
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/landing/landing_task.py
+          parameters:
+          - '{"client_settings": {"description": "XML Data from TUI", "compression":
+            false, "file_type": "xml", "file_pattern": {"name": ".*\\\\.xml$", "min_size_bytes":
+            1}}, "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code":
+            "{{job.parameters.`customer_code`}}", "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "load_type":
+            "incremental"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: raw_data_json_task
+        description: Json Data from TUI
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/landing/landing_task.py
+          parameters:
+          - '{"client_settings": {"description": "Json Data from TUI", "compression":
+            false, "file_type": "json", "file_pattern": {"name": ".*\\\\.json$", "min_size_bytes":
+            1}}, "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code":
+            "{{job.parameters.`customer_code`}}", "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "load_type":
+            "incremental"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: raw_data_zip_task
+        description: ZIP Data from TUI
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/landing/landing_task.py
+          parameters:
+          - '{"client_settings": {"description": "ZIP Data from TUI", "compression":
+            false, "file_type": "zip", "file_pattern": {"name": "^OO-.*\\.zip$", "min_size_bytes":
+            1000000}}, "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code":
+            "{{job.parameters.`customer_code`}}", "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "load_type":
+            "incremental"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: raw_data_zip_to_csv_task
+        description: CSV Data Uncompressed from TUI
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/landing/landing_task.py
+          parameters:
+          - '{"client_settings": {"description": "CSV Data Uncompressed from TUI",
+            "compression": "zip", "file_type": "csv"}, "job_run_id": "{{job.run_id}}",
+            "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}"}'
+        libraries: *id002
+        depends_on:
+        - task_key: raw_data_zip_task
+    prod_deus_AVIATION_TUI_bronze_job_main_branch:
+      name: prod_deus_AVIATION_TUI_bronze_job_main_branch
+      parameters:
+      - name: customer_code
+        default: TUI
+      - name: ingest_start_datetime
+        default: 2010-01-01 17:21
+      - name: ingest_end_datetime
+        default: now
+      - name: ws_env
+        default: prod
+      job_clusters:
+      - *id001
+      email_notifications:
+        on_failure: ${workspace.current_user.userName}
+      tasks:
+      - task_key: flight_plans_task
+        description: Flight Plans in XML format using ARINC 633 standard
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Flight Plans in XML format using
+            ARINC 633 standard", "compression": false, "file_type": "xml", "file_pattern":
+            {"name": "^[^-]*\\.xml$", "min_size_bytes": 0}, "file_parser": {"args":
+            {"header": "true", "rowTag": "FlightPlan"}}, "output_table_name": "flight_data${var.tables_suffix}"},
+            "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: flight_iot_task
+        description: Flight iot sensors data extracted from FDR via Teledyne
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Flight iot sensors data extracted
+            from FDR via Teledyne", "compression": false, "file_type": "csv", "file_pattern":
+            {"name": ".*\\\\.csv$", "min_size_bytes": 0}, "file_parser": {"args":
+            {"skipRows": 4, "header": "true", "header_line": 2}}, "output_table_name":
+            "flight_iot_data${var.tables_suffix}"}, "job_run_id": "{{job.run_id}}",
+            "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: flight_crew_task
+        description: Flight crew info extracted from REST API
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Flight crew info extracted from
+            REST API", "compression": false, "file_type": "json", "file_pattern":
+            {"name": "^actual_flights_data_.*\\.json$", "min_size_bytes": 0}, "file_parser":
+            {"args": {"multiline": "true", "header": "true"}}, "output_table_name":
+            "flight_crew_data${var.tables_suffix}"}, "job_run_id": "{{job.run_id}}",
+            "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: data_expectations_task
+        description: Data expectations task
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/data_expectations.py
+          parameters:
+          - '{"client_settings": {"description": "Data expectations task", "compression":
+            false}, "job_run_id": "{{job.run_id}}", "ws_env": "prod", "output_table_name":
+            "flight_data${var.tables_suffix}"}'
+        libraries: *id002
+        depends_on:
+        - task_key: flight_crew_task
+        - task_key: flight_iot_task
+        - task_key: flight_plans_task
+      - task_key: merge_for_silver_task
+        description: Complete bronze task for silver
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/merge_data_task.py
+          parameters:
+          - '{"client_settings": {"description": "Complete bronze task for silver",
+            "compression": false, "output_table_name": "fuelburn_data${var.tables_suffix}"},
+            "job_run_id": "{{job.run_id}}", "ws_env": "prod", "flight_data_table_name":
+            "flight_data${var.tables_suffix}", "fuelburn_data_table_name": "fuelburn_data${var.tables_suffix}"}'
+        libraries: *id002
+        depends_on:
+        - task_key: data_expectations_task
+    prod_deus_MARITIME_LDC_landing_job_main_branch:
+      name: prod_deus_MARITIME_LDC_landing_job_main_branch
+      parameters:
+      - name: customer_code
+        default: LDC
+      - name: ingest_start_datetime
+        default: 2010-01-01 17:21
+      - name: ingest_end_datetime
+        default: now
+      - name: industry
+        default: maritime
+      - name: ws_env
+        default: prod
+      job_clusters:
+      - *id001
+      email_notifications:
+        on_failure: ${workspace.current_user.userName}
+      tasks:
+      - task_key: raw_json_data_task
+        description: JSON Data from ldc
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/landing/landing_task.py
+          parameters:
+          - '{"client_settings": {"description": "JSON Data from ldc", "compression":
+            false, "file_type": "json", "file_pattern": {"name": ".*\\\\.json$", "min_size_bytes":
+            1}}, "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code":
+            "{{job.parameters.`customer_code`}}", "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}", "load_type": "incremental"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: raw_csv_data_task
+        description: CSV Data from ldc
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/landing/landing_task.py
+          parameters:
+          - '{"client_settings": {"description": "CSV Data from ldc", "compression":
+            false, "file_type": "csv", "file_pattern": {"name": ".*\\\\.csv$", "min_size_bytes":
+            1}}, "job_run_id": "{{job.run_id}}", "ws_env": "prod", "customer_code":
+            "{{job.parameters.`customer_code`}}", "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}", "load_type": "incremental"}'
+        libraries: *id002
+        depends_on: []
+    prod_deus_MARITIME_LDC_bronze_job_main_branch:
+      name: prod_deus_MARITIME_LDC_bronze_job_main_branch
+      parameters:
+      - name: customer_code
+        default: LDC
+      - name: ingest_start_datetime
+        default: 2010-01-01 17:21
+      - name: ingest_end_datetime
+        default: now
+      - name: industry
+        default: maritime
+      - name: ws_env
+        default: prod
+      job_clusters:
+      - *id001
+      email_notifications:
+        on_failure: ${workspace.current_user.userName}
+      tasks:
+      - task_key: mariapps_task
+        description: Noon reports from mariapps
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Noon reports from mariapps", "compression":
+            false, "file_type": "json", "file_pattern": {"name": "^mariapps_.*\\.json$",
+            "min_size_bytes": 0}, "file_parser": {"args": {"multiline": "true", "header":
+            "true"}}, "output_table_name": "mariapps${var.tables_suffix}"}, "job_run_id":
+            "{{job.run_id}}", "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}"}'
+        libraries: *id002
+        depends_on: []
+      - task_key: crew_data_task
+        description: Manually inserted csv crew data
+        job_cluster_key: deus_B2B_jobs_cluster
+        spark_python_task:
+          python_file: ../src/tasks/bronze/bronze_file_ingestion.py
+          parameters:
+          - '{"client_settings": {"description": "Manually inserted csv crew data",
+            "compression": false, "file_type": "csv", "file_pattern": {"name": ".*\\\\.csv$",
+            "min_size_bytes": 0}, "file_parser": {"args": {"skipRows": 0, "header":
+            "true"}}, "output_table_name": "crew_data${var.tables_suffix}"}, "job_run_id":
+            "{{job.run_id}}", "ws_env": "prod", "customer_code": "{{job.parameters.`customer_code`}}",
+            "ingest_start_datetime": "{{job.parameters.`ingest_start_datetime`}}",
+            "ingest_end_datetime": "{{job.parameters.`ingest_end_datetime`}}", "industry":
+            "{{job.parameters.`industry`}}"}'
+        libraries: *id002
+        depends_on: []

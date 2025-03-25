@@ -1,0 +1,16 @@
+services:
+  local_dev:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        # These secrets must be defined in a ".env" file
+        DATABRICKS_HOST: ${DATABRICKS_HOST}
+        DATABRICKS_TOKEN: ${DATABRICKS_TOKEN}   
+        DEUS_LIB_PACKAGE_VERSION: ${DEUS_LIB_PACKAGE_VERSION} 
+    volumes:
+      - ./:/opt/deus_dev_env/
+    environment:
+      - PYTHONPATH=/opt/deus_dev_env
+    tty: true
+    stdin_open: true

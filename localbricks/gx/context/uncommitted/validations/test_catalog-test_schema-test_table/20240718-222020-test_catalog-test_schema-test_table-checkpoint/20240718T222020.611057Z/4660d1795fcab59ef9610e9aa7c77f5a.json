@@ -1,0 +1,63 @@
+{
+  "evaluation_parameters": {},
+  "meta": {
+    "active_batch_definition": {
+      "batch_identifiers": {
+        "catalog": "test_catalog",
+        "schema": "test_schema",
+        "table": "test_table",
+        "timestamp": "2024-07-18 23:20:20"
+      },
+      "data_asset_name": "test_industry-test_catalog-test_schema-test_table",
+      "data_connector_name": "test_industry-test_catalog-test_schema-test_table-data_connector",
+      "datasource_name": "test_industry-test_catalog-test_schema-test_table-datasource"
+    },
+    "batch_markers": {
+      "ge_load_time": "20240718T222020.612335Z"
+    },
+    "batch_spec": {
+      "batch_data": "SparkDataFrame",
+      "data_asset_name": "test_industry-test_catalog-test_schema-test_table"
+    },
+    "checkpoint_id": null,
+    "checkpoint_name": "test_catalog-test_schema-test_table-checkpoint",
+    "expectation_suite_name": "test_catalog-test_schema-test_table",
+    "great_expectations_version": "0.18.8",
+    "run_id": {
+      "run_name": "20240718-222020-test_catalog-test_schema-test_table-checkpoint",
+      "run_time": "2024-07-18T22:20:20.611057+00:00"
+    },
+    "validation_id": null,
+    "validation_time": "20240718T222020.612811Z"
+  },
+  "results": [
+    {
+      "exception_info": {
+        "exception_message": null,
+        "exception_traceback": null,
+        "raised_exception": false
+      },
+      "expectation_config": {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "batch_id": "4660d1795fcab59ef9610e9aa7c77f5a",
+          "column": "aircraftOwner",
+          "type_": "StringType"
+        },
+        "meta": {}
+      },
+      "meta": {},
+      "result": {
+        "observed_value": "StringType"
+      },
+      "success": true
+    }
+  ],
+  "statistics": {
+    "evaluated_expectations": 1,
+    "success_percent": 100.0,
+    "successful_expectations": 1,
+    "unsuccessful_expectations": 0
+  },
+  "success": true
+}

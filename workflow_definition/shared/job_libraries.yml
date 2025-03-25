@@ -1,0 +1,8 @@
+libraries:            
+    - whl: ${workspace.root_path}/files/dist/deus_lib-0.1.0-202407221549-py3-none-any.whl
+    - pypi:
+        package: great_expectations==0.18.8    
+    - pypi:
+        package: pydantic==2.6.4       
+    - pypi:
+        package: pyyaml==6.0.1

@@ -1,0 +1,84 @@
+{
+  "evaluation_parameters": {},
+  "meta": {
+    "active_batch_definition": {
+      "batch_identifiers": {
+        "catalog": "test_catalog",
+        "schema": "test_schema",
+        "table": "test_table",
+        "timestamp": "2024-07-18 13:13:24"
+      },
+      "data_asset_name": "test_industry-test_catalog-test_schema-test_table",
+      "data_connector_name": "test_industry-test_catalog-test_schema-test_table-data_connector",
+      "datasource_name": "test_industry-test_catalog-test_schema-test_table-datasource"
+    },
+    "batch_markers": {
+      "ge_load_time": "20240718T121324.499107Z"
+    },
+    "batch_spec": {
+      "batch_data": "SparkDataFrame",
+      "data_asset_name": "test_industry-test_catalog-test_schema-test_table"
+    },
+    "checkpoint_id": null,
+    "checkpoint_name": "test_catalog-test_schema-test_table-checkpoint",
+    "expectation_suite_name": "test_catalog-test_schema-test_table",
+    "great_expectations_version": "0.18.8",
+    "run_id": {
+      "run_name": "20240718-121324-test_catalog-test_schema-test_table-checkpoint",
+      "run_time": "2024-07-18T12:13:24.496963+00:00"
+    },
+    "validation_id": null,
+    "validation_time": "20240718T121324.500369Z"
+  },
+  "results": [
+    {
+      "exception_info": {
+        "exception_message": null,
+        "exception_traceback": null,
+        "raised_exception": false
+      },
+      "expectation_config": {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "batch_id": "03a5443ba3d9193f7bddf752c24f8ab9",
+          "column": "aircraftOwner",
+          "type_": "StringType"
+        },
+        "meta": {}
+      },
+      "meta": {},
+      "result": {
+        "observed_value": "StringType"
+      },
+      "success": true
+    },
+    {
+      "exception_info": {
+        "exception_message": null,
+        "exception_traceback": null,
+        "raised_exception": false
+      },
+      "expectation_config": {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "batch_id": "03a5443ba3d9193f7bddf752c24f8ab9",
+          "column": "status",
+          "type_": "StringType"
+        },
+        "meta": {}
+      },
+      "meta": {},
+      "result": {
+        "observed_value": "StringType"
+      },
+      "success": true
+    }
+  ],
+  "statistics": {
+    "evaluated_expectations": 2,
+    "success_percent": 100.0,
+    "successful_expectations": 2,
+    "unsuccessful_expectations": 0
+  },
+  "success": true
+}

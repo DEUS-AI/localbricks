@@ -1,0 +1,54 @@
+tables:
+  - name: full_table_name
+    industry: aviation
+    pk: [source_file_name]
+    columns_dq_validations:
+      - function: expect_column_values_to_match_regex
+        args:
+          column: ingestion_datetime
+          regex: "^[a-zA-Z ]*$"
+      - function: expect_column_values_to_match_regex
+        args:
+          column: ingestion_job_run_id
+          regex: "^[a-zA-Z ]*$"
+      - function: expect_column_values_to_be_between
+        args:
+          column: age
+          min_value: 0
+          max_value: 120
+
+  # - name: table2
+  #   catalog: catalog2
+  #   schema: schema2
+  #   columns_dq_validations:
+  #     - function: expect_column_values_to_not_be_null
+  #       args:
+  #         column: email
+  #     - function: expect_column_values_to_be_unique
+  #       args:
+  #         column: user_id
+  #     - function: expect_column_values_to_be_of_type
+  #       args:
+  #         column: signup_date
+  #         type: date
+
+  # - name: table3
+  #   catalog: catalog3
+  #   schema: schema3
+  #   columns_dq_validations:
+  #     - function: expect_column_values_to_be_in_set
+  #       args:
+  #         column: status
+  #         value_set:
+  #           - "active"
+  #           - "inactive"
+  #           - "pending"
+  #     - function: expect_column_mean_to_be_between
+  #       args:
+  #         column: score
+  #         min_value: 0
+  #         max_value: 100
+  #     - function: expect_column_values_to_match_regex
+  #       args:
+  #         column: phone_number
+  #         regex: "^\+?[1-9]\d{1,14}$"

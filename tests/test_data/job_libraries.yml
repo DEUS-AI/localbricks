@@ -1,0 +1,4 @@
+libraries:
+  - whl: ${workspace.root_path}/files/dist/${var.deus_lib_package_version}
+  - pypi:
+      package: pydantic==2.6.4

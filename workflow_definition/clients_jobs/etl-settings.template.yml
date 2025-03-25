@@ -1,0 +1,95 @@
+customer_code: CLIENT_CODE
+industry: INDUSTRY_TYPE
+landing:
+  ingestion:
+    job_parameters:
+      customer_code: "${var.customer_code}"
+      ingest_start_datetime: "2010-01-01 17:21"
+      ingest_end_datetime: "now"
+      industry: "${var.industry}"
+    tasks:
+      raw_data_task:
+        name: "raw_data_task"
+        description: "Raw data ingestion"
+        format: "csv" # Configurable: csv, json, etc.
+        file_pattern:
+          name: '.*\\.(csv|json)$' # Configurable file pattern
+          min_size_bytes: 1
+        compression: false
+        python_file: "../src/tasks/landing/landing_task.py"
+        parameters:
+          job_parameters:
+            - customer_code
+            - ingest_start_datetime
+            - ingest_end_datetime
+            - industry
+          custom_parameters:
+            load_type: "incremental"
+bronze:
+  processing:
+    job_parameters:
+      customer_code: "${var.customer_code}"
+      ingest_start_datetime: "2010-01-01 17:21"
+      ingest_end_datetime: "now"
+      industry: "${var.industry}"
+    tasks:
+      data_source_1_task:
+        name: "data_source_1_task"
+        description: "Process data source 1"
+        format: "csv" # Configurable format
+        file_pattern:
+          name: '^source1_.*\\.csv$' # Configurable pattern
+        file_parser:
+          args:
+            skipRows: 0
+            header: "true"
+            sep: "," # Configurable separator
+        depends_on: []
+        python_file: "../src/tasks/bronze/bronze_file_ingestion.py"
+        output_table_name: source1_data${var.tables_suffix}
+        parameters:
+          job_parameters:
+            - customer_code
+            - ingest_start_datetime
+            - ingest_end_datetime
+            - industry
+      data_source_2_task:
+        name: "data_source_2_task"
+        description: "Process data source 2"
+        format: "csv" # Configurable format
+        file_pattern:
+          name: '^source2_.*\\.csv$' # Configurable pattern
+        file_parser:
+          args:
+            skipRows: 0
+            header: "true"
+            sep: "," # Configurable separator
+        depends_on: []
+        python_file: "../src/tasks/bronze/bronze_file_ingestion.py"
+        output_table_name: source2_data${var.tables_suffix}
+        parameters:
+          job_parameters:
+            - customer_code
+            - ingest_start_datetime
+            - ingest_end_datetime
+            - industry
+      data_source_3_task:
+        name: "data_source_3_task"
+        description: "Process data source 3"
+        format: "csv" # Configurable format
+        file_pattern:
+          name: '^source3_.*\\.csv$' # Configurable pattern
+        file_parser:
+          args:
+            skipRows: 0
+            header: "true"
+            sep: "," # Configurable separator
+        depends_on: []
+        python_file: "../src/tasks/bronze/bronze_file_ingestion.py"
+        output_table_name: source3_data${var.tables_suffix}
+        parameters:
+          job_parameters:
+            - customer_code
+            - ingest_start_datetime
+            - ingest_end_datetime
+            - industry
