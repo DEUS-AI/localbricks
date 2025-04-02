@@ -17,7 +17,7 @@
 #### High Severity (4)
 - [x] urllib3 (2.2.1 -> 2.2.2) ✓
 - [x] PyYAML (6.0.1 -> 6.0.2) ✓
-- [ ] pydantic (2.6.4)
+- [x] pydantic (2.6.4 -> 2.11.1) ✓
 - [ ] oauthlib (3.2.2)
 
 #### Moderate Severity (6)
@@ -48,7 +48,13 @@
     - All tests passing
     - Performance stable (0.19s test execution)
     - Fixes CVE vulnerabilities including unsafe loading
-  - [ ] pydantic: Latest 2.x version
+  - [x] pydantic: 2.6.4 -> 2.11.1 ✓
+    - Updated successfully with dependencies:
+      - pydantic_core: 2.16.3 -> 2.33.0
+      - typing_extensions: 4.10.0 -> 4.12.2
+      - Added typing-inspection 0.4.0
+    - All tests passing
+    - Performance slightly affected (0.21s vs 0.19s)
   - [ ] oauthlib: 3.2.3
 
 ### Phase 3: Moderate & Low Priority Updates
@@ -73,7 +79,20 @@
 
 ## Update History
 
-### PyYAML 6.0.1 -> 6.0.2 (Current)
+### pydantic 2.6.4 -> 2.11.1 (Current)
+- Updated: March 27, 2024
+- Status: ✓ Success
+- Test Results: All passing (20/20)
+- Performance: 0.21s (slight increase from 0.19s)
+- Changes:
+  - Updated pydantic to 2.11.1
+  - Updated pydantic_core to 2.33.0
+  - Updated typing_extensions to 4.12.2
+  - Added typing-inspection 0.4.0
+  - Verified all tests passing
+  - Minor performance impact (0.02s slower)
+
+### PyYAML 6.0.1 -> 6.0.2 (Previous)
 - Updated: March 27, 2024
 - Status: ✓ Success
 - Test Results: All passing (20/20)
