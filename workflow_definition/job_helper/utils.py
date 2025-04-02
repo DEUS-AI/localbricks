@@ -1,5 +1,6 @@
 import yaml, git
 from typing import Any
+import os
 
 def display_building_msg(task_key: str):
     """
@@ -14,42 +15,42 @@ def display_building_msg(task_key: str):
 
     print(f'Starting building task {task_key}')
 
-def load_yaml_file(file_path: str) -> dict[str, Any]:
+def load_yaml(file_path: str) -> dict:
     """
-    Loads and parses a YAML file.
-
+    Load a YAML file and return its contents as a dictionary.
+    
     Args:
-        file_path (str): The path to the YAML file to be loaded.
-
+        file_path (str): Path to the YAML file
+        
     Returns:
-        Dict[str, Any]: The content of the YAML file as a dictionary.
-
-    Raises:
-        RuntimeError: If there is an error in loading the YAML file.
+        dict: Contents of the YAML file
     """
+    with open(file_path, 'r') as f:
+        return yaml.safe_load(f)
 
-    try:
-        with open(file_path) as file:
-            content: dict[str, Any]  = yaml.safe_load(file)
-        return content
-    except yaml.YAMLError as exc:
-        raise RuntimeError(f"Error in loading {file_path}: {exc}")
-
+def load_yaml_file(file_path: str) -> dict:
+    """
+    Load a YAML file and return its contents as a dictionary.
+    
+    Args:
+        file_path (str): Path to the YAML file
+        
+    Returns:
+        dict: Contents of the YAML file
+    """
+    with open(file_path, 'r') as f:
+        return yaml.safe_load(f)
 
 def save_yaml_file(filepath: str, content: dict) -> None:
     """
-    Saves content to a YAML file.
-
+    Save content to a YAML file.
+    
     Args:
-        filepath (str): The path to the YAML file to be saved.
-        content (Dict[str, Any]): The content to be saved to the YAML file.
-
-    Returns:
-        None
+        filepath (str): Path where to save the YAML file
+        content (dict): Content to save
     """
-    with open(filepath, 'w') as file:
-        yaml.safe_dump(content, file, sort_keys=False, default_flow_style=False)
-
+    with open(filepath, 'w') as f:
+        yaml.dump(content, f, default_flow_style=False)
 
 def get_current_branch() -> str:
     """

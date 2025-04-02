@@ -53,8 +53,8 @@ def build_task_params(task: dict[str, Task]) -> dict[str, Any]:
             "description": task.description,
             "compression": task.compression,
             "file_type": task.format,
-            "file_pattern": task.file_pattern.dict() if task.file_pattern else None,
-            "file_parser": task.file_parser.dict() if task.file_parser else None,
+            "file_pattern": task.file_pattern.model_dump() if task.file_pattern else None,
+            "file_parser": task.file_parser.model_dump() if task.file_parser else None,
             "output_table_name": task.output_table_name
         }
     }
@@ -106,8 +106,8 @@ def orchestrate_tasks(
 def build_layer_job(
     ws_env: str,
     layer: str,
-    customer_code: str,
-    industry: str,
+    dds_code: str,
+    domain: str,
     layer_info: dict,
     cluster_config: dict[str, Any],
     libs_config: dict[str, Any],
@@ -115,7 +115,7 @@ def build_layer_job(
     orchestrator: Callable[[JobConfig, Dict[str, Any], Dict[str, Any]], List[Dict[str, Any]]]
 ) -> Tuple[str, Dict[str, Any]]:
     
-    client_job_key = f'{ws_env}_deus_{industry}_{customer_code}_{layer}_job_{branch_name}_branch'
+    client_job_key = f'{ws_env}_deus_{domain}_{dds_code}_{layer}_job_{branch_name}_branch'
 
     job_layer = next(iter(layer_info.values()))
     job_parameters = job_layer.job_parameters
@@ -139,51 +139,42 @@ def build_layer_job(
 
     return (client_job_key, client_job_content)
 
-def main(ws_env: str = None, customer_code: str = None, resource_dir=None):
+def main(ws_env: str = None, dds_code: str = None, resource_dir=None):
     """
-    Main function to load configurations, prepare client jobs, and save them into a YAML file as resources.
-
-    This function orchestrates the creation of jobs for various clients based on their configurations.
-    It loads shared configurations for clusters and libraries, reads client-specific job configurations,
-    builds the required jobs for each client, and finally saves all jobs into a consolidated YAML file.
-
-    Returns:
-        None
-    """
-    branch_name = get_current_branch()
+    Main function to process job configurations and generate job definitions.
     
-    if ws_env == "prod" and branch_name != "main":
-        print("Error, can't deploy into PROD any other branch than main")
-        return 0
-        
+    Args:
+        ws_env (str, optional): Workspace environment. Defaults to None.
+        dds_code (str, optional): Domain Data Store code. Defaults to None.
+        resource_dir (_type_, optional): Resource directory path. Defaults to None.
+    """
+    project_root = get_project_root()
+    
     if resource_dir is None:
-        current_file_directory = os.path.dirname(os.path.abspath(__file__)).replace('/job_helper', '')
-        project_root = os.path.dirname(current_file_directory)
-    else:
-        project_root = resource_dir
+        resource_dir = os.path.join(project_root, 'workflow_definition/clients_jobs')
     
-    # build file path for cluster, lib config and client jobs
-    cluster_config_file_path = os.path.join(project_root, "workflow_definition/shared/job_cluster.yml")
-    libs_config_file_path = os.path.join(project_root, "workflow_definition/shared/job_libraries.yml")
-    clients_jobs_dir = os.path.join(project_root, "workflow_definition/clients_jobs")
+    # Load cluster configuration
+    cluster_config_path = os.path.join(project_root, 'workflow_definition/shared/job_cluster.yml')
+    cluster_config = load_yaml_file(file_path=cluster_config_path)
     
-    # load cluster and libs config
-    cluster_config = load_yaml_file(file_path=cluster_config_file_path)
-    libs_config = load_yaml_file(file_path=libs_config_file_path)
+    # Load libraries configuration
+    libs_config_path = os.path.join(project_root, 'workflow_definition/shared/job_libraries.yml')
+    libs_config = load_yaml_file(file_path=libs_config_path)
     
-    # build client_job_path definition
-    filtered_client = str(customer_code).lower() if customer_code is not None else ''
-    yaml_suffix = f'{filtered_client}.yml'
-    client_jobs_file_yaml_paths = [os.path.join(clients_jobs_dir, client_job_filename) for client_job_filename in os.listdir(clients_jobs_dir) if client_job_filename.endswith(yaml_suffix)]
-        
+    # Get branch name
+    branch_name = get_branch_name()
+    
+    # Get all client job configuration files
+    client_jobs_file_yaml_paths = get_client_jobs_file_yaml_paths(resource_dir)
+    
     client_jobs = {}
     
     for client_job_path in client_jobs_file_yaml_paths:
         client_settings = load_yaml_file(file_path=client_job_path)
         
         if client_settings:
-            customer_code = str(client_settings['customer_code']).upper()
-            industry = client_settings['industry']
+            dds_code = str(client_settings['dds_code']).upper()
+            domain = client_settings['domain']
 
             job_config = JobConfig(**client_settings)
 
@@ -194,8 +185,8 @@ def main(ws_env: str = None, customer_code: str = None, resource_dir=None):
                     job_key, job = build_layer_job(
                         ws_env=ws_env,
                         layer=layer,
-                        customer_code=customer_code,
-                        industry=industry,
+                        dds_code=dds_code,
+                        domain=domain,
                         layer_info=layer_info,
                         cluster_config=cluster_config,
                         libs_config=libs_config,
@@ -204,7 +195,7 @@ def main(ws_env: str = None, customer_code: str = None, resource_dir=None):
                     )
                     client_jobs[job_key] = job
     
-    # Separar los trabajos por entorno (aunque ahora todos los jobs generados serán del entorno correcto)
+    # Separate jobs by environment
     env_jobs = separate_jobs_by_env(client_jobs.keys(), ws_env)
     
     all_jobs = {'resources': {'jobs': {}}}
@@ -222,5 +213,5 @@ if __name__ == '__main__':
     parser.add_argument("--customer", required=False) # optional
     args = parser.parse_args()
     ws_env = args.target # workspace environment
-    customer_code = args.customer
-    main(ws_env=ws_env, customer_code=customer_code) 
+    dds_code = args.customer
+    main(ws_env=ws_env, dds_code=dds_code) 

@@ -3,8 +3,8 @@ from typing import Any, Optional
 
 class TaskParams(BaseModel):    
     job_run_id: str
-    customer_code: str
-    industry: str
+    dds_code: str
+    domain: str
     ingest_start_datetime: Optional[str]
     ingest_end_datetime: Optional[str]
     ws_env: Optional[str]

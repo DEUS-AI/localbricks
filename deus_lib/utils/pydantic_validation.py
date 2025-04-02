@@ -38,39 +38,39 @@ def extract_client_names(file_path_from_root: str) -> set[str]:
     
 class TaskJobParamConfig(BaseModel):
     job_run_id: str
-    customer_code: Optional[str] = None
+    dds_code: Optional[str] = None
     skip_ingestion: Optional[bool] = None
     ingest_start_datetime: Optional[str] = None
     ingest_end_datetime: Optional[str] = None
     load_type: Optional[str] = None
-    industry: Optional[str] = None
+    domain: Optional[str] = None
     ws_env: Optional[str]
 
-    valid_customer_codes: ClassVar[set[str]] = {'TUI', 'VS', 'ST', 'CGL','PGA','LDC','CHR'}
-    valid_industries: ClassVar[set[str]] = {'aviation','maritime'}
+    valid_dds_codes: ClassVar[set[str]] = {'TUI', 'VS', 'ST', 'CGL', 'PGA', 'LDC', 'CHR'}
+    valid_domains: ClassVar[set[str]] = {'aviation', 'maritime'}
 
-    @field_validator('industry')
+    @field_validator('domain')
     @classmethod
-    def check_industry(cls, v: str) -> str:
+    def check_domain(cls, v: str) -> str:
         if v is None:
             return v
         else:
-            if v not in cls.valid_industries:
-                raise ValueError(f'Invalid industry name: {v}, available industries: {cls.valid_industries}')
+            if v not in cls.valid_domains:
+                raise ValueError(f'Invalid domain name: {v}, available domains: {cls.valid_domains}')
             else:
                 return v
 
-    @field_validator('customer_code')
+    @field_validator('dds_code')
     @classmethod
-    def check_customer_code(cls, v: str) -> str:
+    def check_dds_code(cls, v: str) -> str:
         if v is None:
             return v
         else:
-            customer_code = v.upper()
-            if customer_code not in cls.valid_customer_codes:
-                raise ValueError(f'Invalid customer code: {v}, available customer codes: {cls.valid_customer_codes}')
+            dds_code = v.upper()
+            if dds_code not in cls.valid_dds_codes:
+                raise ValueError(f'Invalid DDS code: {v}, available DDS codes: {cls.valid_dds_codes}')
             else:
-                return customer_code
+                return dds_code
 
     @field_validator('load_type')
     @classmethod
@@ -80,7 +80,7 @@ class TaskJobParamConfig(BaseModel):
         else:
             load_type = v.lower()
 
-            if load_type not in ('full','incremental'):
+            if load_type not in ('full', 'incremental'):
                 raise ValueError(f'Invalid load_type {load_type}, you can only choose full or incremental')
             else:
                 return v
@@ -115,11 +115,11 @@ if __name__ == '__main__':
     try:
         config = TaskJobParamConfig(
             job_run_id='661966544802159',
-            customer_code='TUI',
+            dds_code='TUI',
             ingest_start_datetime='2010-01-01 17:20',
             ingest_end_datetime='now',
             load_type='incremental',
-            industry = 'aviation'
+            domain = 'aviation'
             )
         print(config)
     except Exception as e:

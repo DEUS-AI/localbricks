@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "deus_pipelines"
 version = "0.1.0"
-description = "wheel file based on Deusteam-pipeline_dev/src"
-authors = ["Your Name <you@example.com>"]
+description = "Localbricks is a library for building and running pipelines with Databricks Assets Bundle. "
+authors = ["DEUS DataAvengers <dataavengers@deus.ai>"]
 readme = "README.md"
 package-mode = true
 packages = [

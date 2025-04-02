@@ -1,89 +1,120 @@
-customer_code: CLIENT
-industry: INDUSTRY
+dds_code: DDS_CODE
+domain: DOMAIN_TYPE
 landing:
   ingestion:
+    job_parameters:
+      dds_code: "${var.dds_code}"
+      ingest_start_datetime: "2010-01-01 17:21"
+      ingest_end_datetime: "now"
+      domain: "${var.domain}"
     tasks:
       raw_data_task:
         name: "raw_data_task"
-        description: "Generic data ingestion task"
+        description: "Raw data ingestion"
+        format: "csv" # Configurable: csv, json, etc.
         file_pattern:
           name: "raw_data"
-          name_regex: "*.csv"
+          name_regex: '.*\\.(csv|json)$' # Configurable file pattern
           min_size_bytes: 1
-          format: "csv"
-        compression: "false"
+        compression: false
         python_file: "../src/tasks/landing/landing_task.py"
         parameters:
-          start_date: "${var.start_date}"
-          end_date: "${var.end_date}"
-        depends_on: []
+          job_parameters:
+            - dds_code
+            - ingest_start_datetime
+            - ingest_end_datetime
+            - domain
+          custom_parameters:
+            load_type: "incremental"
 bronze:
   processing:
+    job_parameters:
+      dds_code: "${var.dds_code}"
+      ingest_start_datetime: "2010-01-01 17:21"
+      ingest_end_datetime: "now"
+      domain: "${var.domain}"
     tasks:
       data_source_1_task:
         name: "data_source_1_task"
         description: "Process data source 1"
+        format: "csv" # Configurable format
         file_pattern:
           name: "source1"
-          name_regex: "source1_*.csv"
-          min_size_bytes: 1
-          format: "csv"
-        compression: "false"
-        python_file: "../src/tasks/bronze/bronze_file_ingestion.py"
-        parameters:
-          file_parser:
-            args:
-              skipRows: 0
-              header: "true"
-          output_table_name: source1_data${var.tables_suffix}
+          name_regex: '^source1_.*\\.csv$' # Configurable pattern
+        file_parser:
+          args:
+            skipRows: 0
+            header: "true"
+            sep: "," # Configurable separator
         depends_on: []
+        python_file: "../src/tasks/bronze/bronze_file_ingestion.py"
+        output_table_name: source1_data${var.tables_suffix}
+        parameters:
+          job_parameters:
+            - dds_code
+            - ingest_start_datetime
+            - ingest_end_datetime
+            - domain
       data_source_2_task:
         name: "data_source_2_task"
         description: "Process data source 2"
+        format: "csv" # Configurable format
         file_pattern:
           name: "source2"
-          name_regex: "source2_*.csv"
-          min_size_bytes: 1
-          format: "csv"
-        compression: "false"
-        python_file: "../src/tasks/bronze/bronze_file_ingestion.py"
-        parameters:
-          file_parser:
-            args:
-              skipRows: 0
-              header: "true"
-          output_table_name: source2_data${var.tables_suffix}
+          name_regex: '^source2_.*\\.csv$' # Configurable pattern
+        file_parser:
+          args:
+            skipRows: 0
+            header: "true"
+            sep: "," # Configurable separator
         depends_on: []
+        python_file: "../src/tasks/bronze/bronze_file_ingestion.py"
+        output_table_name: source2_data${var.tables_suffix}
+        parameters:
+          job_parameters:
+            - dds_code
+            - ingest_start_datetime
+            - ingest_end_datetime
+            - domain
       data_expectations_task:
         name: "data_expectations_task"
-        description: "Data quality expectations task"
+        description: "Data quality expectations"
         python_file: "../src/tasks/bronze/data_expectations.py"
         parameters:
+          job_parameters:
+            - dds_code
+            - domain
           file_parser:
             args:
               skipRows: 0
               header: "true"
-          output_table_name: validated_data${var.tables_suffix}
+          output_table_name: data_quality${var.tables_suffix}
         depends_on: ["data_source_1_task", "data_source_2_task"]
 silver:
   analysis:
     tasks:
       silver_task:
         name: "silver_task"
-        description: "Silver layer transformation task"
+        description: "Silver analysis task"
         python_file: "../src/tasks/silver/analysis.py"
         parameters:
-          start_date: "${var.start_date}"
-          end_date: "${var.end_date}"
+          job_parameters:
+            - dds_code
+            - domain
+          start_date: value1
+          end_date: value2
         depends_on: []
 gold:
   reporting:
     tasks:
       gold_task:
         name: "gold_task"
-        description: "Gold layer aggregation task"
+        description: "Gold reporting task"
         python_file: "../src/tasks/gold/reporting.py"
         parameters:
-          start_date: "${var.start_date}"
-          end_date: "${var.end_date}"
+          job_parameters:
+            - dds_code
+            - domain
+          start_date: value1
+          end_date: value2
         depends_on: []

@@ -2,6 +2,7 @@ import pytest
 from pydantic import ValidationError
 import yaml
 from workflow_definition.job_helper.model.job_config import JobConfig
+from workflow_definition.job_helper.utils import load_yaml
 
 def load_yaml(file_path):
     with open(file_path, 'r') as file:
@@ -12,25 +13,25 @@ def test_job_config_valid():
     job_config_data = load_yaml('tests/test_data/valid_etl-settings.template.yml')
     job_config = JobConfig(**job_config_data)
     
-    assert job_config.customer_code == "CLIENT"
-    assert job_config.industry == "INDUSTRY"
+    assert job_config.dds_code == "DDS_CODE"
+    assert job_config.domain == "DOMAIN_TYPE"
     assert job_config.landing["ingestion"].tasks["raw_data_task"].name == "raw_data_task"
     assert job_config.bronze["processing"].tasks["data_source_1_task"].name == "data_source_1_task"
     assert job_config.silver["analysis"].tasks["silver_task"].name == "silver_task"
     assert job_config.gold["reporting"].tasks["gold_task"].name == "gold_task"
 
-def test_job_config_missing_customer_code():
-    """Test validation error when customer code is missing."""
+def test_job_config_missing_dds_code():
+    """Test validation error when DDS code is missing."""
     job_config_data = load_yaml('tests/test_data/valid_etl-settings.template.yml')
-    del job_config_data['customer_code']
+    del job_config_data['dds_code']
     
     with pytest.raises(ValidationError):
         JobConfig(**job_config_data)
 
-def test_job_config_missing_industry():
-    """Test validation error when industry is missing."""
+def test_job_config_missing_domain():
+    """Test validation error when domain is missing."""
     job_config_data = load_yaml('tests/test_data/valid_etl-settings.template.yml')
-    del job_config_data['industry']
+    del job_config_data['domain']
     
     with pytest.raises(ValidationError):
         JobConfig(**job_config_data)
@@ -38,8 +39,8 @@ def test_job_config_missing_industry():
 def test_job_config_optional_fields():
     """Test configuration with only required fields."""
     job_config_data = {
-        "customer_code": "CLIENT",
-        "industry": "INDUSTRY",
+        "dds_code": "DDS_CODE",
+        "domain": "DOMAIN_TYPE",
         "landing": {
             "ingestion": {
                 "tasks": {
@@ -53,8 +54,8 @@ def test_job_config_optional_fields():
     }
 
     job_config = JobConfig(**job_config_data)
-    assert job_config.customer_code == "CLIENT"
-    assert job_config.industry == "INDUSTRY"
+    assert job_config.dds_code == "DDS_CODE"
+    assert job_config.domain == "DOMAIN_TYPE"
     assert job_config.landing["ingestion"].tasks["raw_data_task"].name == "raw_data_task"
     assert job_config.bronze is None
     assert job_config.silver is None
@@ -77,13 +78,14 @@ def test_job_config_file_patterns():
     
     # Check landing task file pattern
     landing_task = job_config.landing["ingestion"].tasks["raw_data_task"]
-    assert landing_task.file_pattern.name_regex == "*.csv"
+    assert landing_task.file_pattern.name_regex == ".*\\\\.(csv|json)$"
     assert landing_task.file_pattern.min_size_bytes == 1
+    assert landing_task.file_pattern.format is None
     
     # Check bronze task file pattern
     bronze_task = job_config.bronze["processing"].tasks["data_source_1_task"]
-    assert bronze_task.file_pattern.name_regex == "source1_*.csv"
-    assert bronze_task.file_pattern.min_size_bytes == 1
+    assert bronze_task.file_pattern.name_regex == "^source1_.*\\\\.csv$"
+    assert bronze_task.file_pattern.name == "source1"
 
 def test_job_config_parameters():
     """Test task parameters configuration."""
@@ -92,13 +94,13 @@ def test_job_config_parameters():
     
     # Check silver task parameters
     silver_task = job_config.silver["analysis"].tasks["silver_task"]
-    assert silver_task.parameters.get("start_date") == "${var.start_date}"
-    assert silver_task.parameters.get("end_date") == "${var.end_date}"
+    assert silver_task.parameters.get("start_date") == "value1"
+    assert silver_task.parameters.get("end_date") == "value2"
     
     # Check bronze task parameters
     bronze_task = job_config.bronze["processing"].tasks["data_source_1_task"]
-    assert bronze_task.parameters["file_parser"]["args"]["header"] == "true"
-    assert bronze_task.parameters["file_parser"]["args"]["skipRows"] == 0
+    assert bronze_task.file_parser.args["header"] == "true"
+    assert bronze_task.file_parser.args["skipRows"] == 0
 
 if __name__ == "__main__":
     pytest.main()

@@ -1,80 +1,74 @@
-customer_code: VS
-industry: AVIATION
+dds_code: "VS"
+domain: "AVIATION"
+
 landing:
   ingestion:
     tasks:
       raw_data_task:
         name: "raw_data_task"
-        description: "CSV Data from virgin atlantic"
+        description: "Ingests raw data from source"
         file_pattern:
           name: "raw_data"
-          name_regex: "*.csv"
-          min_size_bytes: 1
+          name_regex: ".*\\.(csv|json)$"
+          min_size_bytes: 0
           format: "csv"
-        compression: "false"
-        python_file: "../src/tasks/landing/csv_loading_path.py"
+        compression: "none"
+        python_file: "raw_data_task.py"
         parameters:
-          start_date: value1
-          end_date: value2
+          start_date: "value1"
+          end_date: "value2"
         depends_on: []
+
 bronze:
-  processing:
+  transformation:
     tasks:
       Flight_Plans_task:
         name: "Flight_Plans_task"
-        description: "Ingestion of flight plans CSV"
+        description: "Transforms flight plans data"
         file_pattern:
           name: "flight_plans"
-          name_regex: "*.csv"
-          min_size_bytes: 1
+          name_regex: ".*\\.(csv|json)$"
+          min_size_bytes: 0
           format: "csv"
-        compression: "false"
-        python_file: "../src/tasks/bronze/csv_ingestion.py"
+        compression: "none"
+        python_file: "flight_plans_task.py"
         parameters:
-          start_date: value1
-          end_date: value2
-        depends_on: []
-      data_expectations_task:
-        name: "data_expectations_task"
-        description: "Data expectations task"
-        python_file: "../src/tasks/bronze/data_expectations.py"
-        parameters:
-          file_parser:
-            args:
-              skipRows: 0
-              header: "true"
-          output_table_name: flight_data${var.tables_suffix}
-        depends_on: ["Flight_Plans_task"]
-      complete_bronze_task:
-        name: "complete_bronze_task"
-        description: "Complete bronze task"
-        python_file: "../src/tasks/bronze/complete_bronze.py"
-        parameters:
-          file_parser:
-            args:
-              skipRows: 0
-              header: "true"
-          output_table_name: fuelburn_data${var.tables_suffix}
-        depends_on: ["data_expectations_task"]
+          start_date: "value1"
+          end_date: "value2"
+        depends_on: ["raw_data_task"]
+
 silver:
   analysis:
     tasks:
       silver_task:
         name: "silver_task"
-        description: "Silver analysis task"
-        python_file: "../src/tasks/silver/analysis.py"
+        description: "Analyzes flight data"
+        file_pattern:
+          name: "silver_data"
+          name_regex: ".*\\.(csv|json)$"
+          min_size_bytes: 0
+          format: "csv"
+        compression: "none"
+        python_file: "silver_task.py"
         parameters:
-          start_date: value1
-          end_date: value2
-        depends_on: []
+          start_date: "value1"
+          end_date: "value2"
+        depends_on: ["Flight_Plans_task"]
+
 gold:
   reporting:
     tasks:
       gold_task:
         name: "gold_task"
-        description: "Gold reporting task"
-        python_file: "../src/tasks/gold/reporting.py"
+        description: "Generates reports"
+        file_pattern:
+          name: "gold_data"
+          name_regex: ".*\\.(csv|json)$"
+          min_size_bytes: 0
+          format: "csv"
+        compression: "none"
+        python_file: "gold_task.py"
         parameters:
-          start_date: value1
-          end_date: value2
-        depends_on: []
+          start_date: "value1"
+          end_date: "value2"
+        depends_on: ["silver_task"]
