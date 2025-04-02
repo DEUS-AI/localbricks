@@ -12,7 +12,7 @@
             "%d/%m/%Y",
             "%Y-%m-%d"
         ],
-        "ddsCode": "ST",        
+        "domain": "maritime",
         "join_keys": ["vehicle", "imo", "report_date"],
         "csvFields": [
             {
@@ -36,13 +36,7 @@
                 "eventType": "*"
             },
             {
-                "name": "customer_name",
-                "type": "string",
-                "options": [],
-                "eventType": "*"
-            },
-            {
-                "name": "customer_code",
+                "name": "dds_name",
                 "type": "string",
                 "options": [],
                 "eventType": "*"

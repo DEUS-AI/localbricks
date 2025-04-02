@@ -43,13 +43,7 @@
                 "eventType": "*"
             },
             {
-                "name": "customer_name",
-                "type": "string",
-                "options": [],
-                "eventType": "*"
-            },
-            {
-                "name": "customer_code",
+                "name": "dds_name",
                 "type": "string",
                 "options": [],
                 "eventType": "*"

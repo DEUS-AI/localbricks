@@ -1,0 +1,70 @@
+[
+    {
+        "name": "Reduced_Engine_Taxi_Out",
+        "acronym": "RETO",
+        "description": "<insert here...>",
+        "teams": [ "VSDefaultTeam" ],
+        "filters": [
+            {
+                "field_name": "vehicle",
+                "values": [
+                    "B787",
+                    "A339"
+                ]
+            },
+            {
+                "field_name": "origin",
+                "values": [
+                    "ANU",
+                    "GND",
+                    "HAV",
+                    "SJU",
+                    "SVD",
+                    "TAB",
+                    "UVF"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Reduced_Engine_Taxi_In",
+        "acronym": "RETI",
+        "description": "<insert here...>",
+        "teams": [ "VSDefaultTeam" ],
+        "filters": [
+            {
+                "field_name": "destination",
+                "values": [
+                    "ANU",
+                    "GND",
+                    "HAV",
+                    "SJU",
+                    "SVD",
+                    "TAB",
+                    "UVF"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Efficient_Flight",
+        "acronym": "EF",
+        "description": "<insert here...>",
+        "teams": [ "VSDefaultTeam" ],
+        "filters": [
+            {
+                "field_name": "vehicle",
+                "values": [
+                    "A339"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Optimal_Discretionary_Fuel_Load",
+        "acronym": "ODFL",
+        "description": "<insert here...>",
+        "teams": [ "VSDefaultTeam" ],
+        "filters": []
+    }
+]

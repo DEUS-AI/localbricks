@@ -1,0 +1,71 @@
+{
+    "vessel_type_1": {
+        "AE1": {
+            "max_load": 1400,
+            "min_load": 110,
+            "const": 0.8
+        },
+        "AE2": {
+            "max_load": 1400,
+            "min_load": 110,
+            "const": 0.8
+        },
+        "AE3": {
+            "max_load": 1400,
+            "min_load": 110,
+            "const": 0.8
+        },
+        "AE4": {
+            "max_load": 1400,
+            "min_load": 110,
+            "const": 0.8
+        },
+        "aeu_lower_threshold": 0.80
+    },
+    "vessel_type_2": {
+        "AE1": {
+            "max_load": 2430,
+            "min_load": 350,
+            "const": 0.8
+        },
+        "AE2": {
+            "max_load": 3645,
+            "min_load": 350,
+            "const": 0.8
+        },
+        "AE3": {
+            "max_load": 3645,
+            "min_load": 350,
+            "const": 0.8
+        },
+        "AE4": {
+            "max_load": 3645,
+            "min_load": 350,
+            "const": 0.8
+        },
+        "aeu_lower_threshold": 0.90
+    },
+    "vessel_type_3": {
+        "AE1": {
+            "max_load": 1055,
+            "min_load": 120,
+            "const": 0.8
+        },
+        "AE2": {
+            "max_load": 1055,
+            "min_load": 120,
+            "const": 0.8
+        },
+        "AE3": {
+            "max_load": 1055,
+            "min_load": 120,
+            "const": 0.8
+        },
+        "AE4": {
+            "max_load": 1055,
+            "min_load": 120,
+            "const": 0.8
+        },
+        "aeu_lower_threshold": 0.80
+    }
+} 
