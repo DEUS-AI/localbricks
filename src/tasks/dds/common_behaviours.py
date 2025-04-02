@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional, Any
 from pyspark.sql import DataFrame
 import pyspark.sql.functions as F
 from deus_lib.utils.reason_constants import *
@@ -10,58 +10,171 @@ class BaseCalculatorBehaviours:
 
     def __init__(self, dds_code: str):
         logging.info(f"Starting base calculator for DDS code {dds_code}")
+        self.dds_code = dds_code
 
     def _init_behaviour_columns(self, df, bvr_name: str) -> DataFrame:
-        col_prefix = bvr_name.lower()
-        df = df.withColumn(f"{col_prefix}__savings", F.lit(0))
-        df = df.withColumn(f"{col_prefix}__success", F.lit(False))
-        df = df.withColumn(f"{col_prefix}__best_case_savings", F.lit(0))
-        df = df.withColumn(f"{col_prefix}__reason", F.lit(''))
-
-        return df
+        """Initialize behaviour columns with default values.
         
+        Args:
+            df: Input DataFrame
+            bvr_name: Name of the behaviour
+            
+        Returns:
+            DataFrame with initialized columns
+        """
+        try:
+            col_prefix = bvr_name.lower()
+            df = df.withColumn(f"{col_prefix}__savings", F.lit(0))
+            df = df.withColumn(f"{col_prefix}__success", F.lit(False))
+            df = df.withColumn(f"{col_prefix}__best_case_savings", F.lit(0))
+            df = df.withColumn(f"{col_prefix}__reason", F.lit(''))
+            return df
+        except Exception as e:
+            logger.error(f"Error initializing behaviour columns for {bvr_name}: {str(e)}")
+            raise
+
     def _validate_required_fields(self, df, bvr_name: str, required_fields=[], *args) -> Tuple[DataFrame, bool]:
-        col_prefix = bvr_name.lower()
-        has_missing_values = False
-        for field in required_fields:
-            if field not in df.columns:
-                logger.warning(f"Required field '{field}' not present in df for {bvr_name.upper()} calculation")
+        """Validate required fields exist in DataFrame.
+        
+        Args:
+            df: Input DataFrame
+            bvr_name: Name of the behaviour
+            required_fields: List of required field names
+            
+        Returns:
+            Tuple of (DataFrame with validation columns, boolean indicating if validation failed)
+        """
+        try:
+            col_prefix = bvr_name.lower()
+            has_missing_values = False
+            missing_fields = []
+            
+            for field in required_fields:
+                if field not in df.columns:
+                    missing_fields.append(field)
+                    has_missing_values = True
+            
+            if has_missing_values:
+                logger.warning(f"Required fields {missing_fields} not present in df for {bvr_name.upper()} calculation")
                 df = df.withColumn(f"{col_prefix}__savings", F.lit(0))
                 df = df.withColumn(f"{col_prefix}__success", F.lit(False))
                 df = df.withColumn(f"{col_prefix}__best_case_savings", F.lit(0))
                 df = df.withColumn(f"{col_prefix}__reason", 
                                 F.when(F.col(f"{col_prefix}__reason") == '', F.lit(FAULTY_DATA__MISSING_REQUIRED_VALUES))
                                 .otherwise(F.col(f"{col_prefix}__reason")))
-                has_missing_values = True
-        return df, has_missing_values
-        
-    def _default_nan_values(self, df, bvr_name: str) -> DataFrame:
-        col_prefix = bvr_name.lower()
-        df = df.withColumn(f"{col_prefix}__reason", F.when(F.col(f"{col_prefix}__reason").isNull(), '').otherwise(F.col(f"{col_prefix}__reason").cast("string")))
-        df = df.withColumn(f"{col_prefix}__success", F.when(F.col(f"{col_prefix}__success").isNull(), F.lit(False)).otherwise(F.col(f"{col_prefix}__success").cast("boolean")))
-        df = df.withColumn(f"{col_prefix}__savings", F.when(F.col(f"{col_prefix}__savings").isNull(), F.lit(0)).otherwise(F.col(f"{col_prefix}__savings").cast("float")))
-        df = df.withColumn(f"{col_prefix}__best_case_savings", F.when(F.col(f"{col_prefix}__best_case_savings").isNull(), F.lit(0)).otherwise(F.col(f"{col_prefix}__best_case_savings").cast("float")))
-
-        return df
-
-    def _set_secondary_reasons(self, df, bvr_name: str, reasons={}) -> DataFrame:
-        col_prefix = bvr_name.lower()
-        for other_reason, bool_condition in reasons.items():
-            no_high_priority_reason = (F.col(f"{col_prefix}__reason").isNull()) | (F.col(f"{col_prefix}__reason") == '')
-            df = df.withColumn(f"{col_prefix}__reason", 
-                            F.when(no_high_priority_reason & bool_condition, other_reason)
-                            .otherwise(F.col(f"{col_prefix}__reason")))
-            df = df.withColumn(f"{col_prefix}__success", 
-                            F.when(no_high_priority_reason & bool_condition, F.lit(False))
-                            .otherwise(F.col(f"{col_prefix}__success")))
-            df = df.withColumn(f"{col_prefix}__savings", 
-                            F.when(no_high_priority_reason & bool_condition, F.lit(0))
-                            .otherwise(F.col(f"{col_prefix}__savings")))
-            df = df.withColumn(f"{col_prefix}__best_case_savings", 
-                            F.when(no_high_priority_reason & bool_condition, F.lit(0))
-                            .otherwise(F.col(f"{col_prefix}__best_case_savings")))
             
+            return df, has_missing_values
+        except Exception as e:
+            logger.error(f"Error validating required fields for {bvr_name}: {str(e)}")
+            raise
+
+    def _set_secondary_reasons(self, df: DataFrame, bvr_name: str, reasons: Dict) -> DataFrame:
+        """Set secondary reasons for behaviour failures.
+        
+        Args:
+            df: Input DataFrame
+            bvr_name: Name of the behaviour
+            reasons: Dictionary of reason codes and conditions
+            
+        Returns:
+            DataFrame with updated reason codes
+        """
+        try:
+            col_prefix = bvr_name.lower()
+            for reason_code, condition in reasons.items():
+                df = df.withColumn(f"{col_prefix}__reason",
+                    F.when(
+                        (condition) & (F.col(f"{col_prefix}__reason") == ''),
+                        F.lit(reason_code)
+                    ).otherwise(F.col(f"{col_prefix}__reason"))
+                )
             return df
+        except Exception as e:
+            logger.error(f"Error setting secondary reasons for {bvr_name}: {str(e)}")
+            raise
+
+    def _default_nan_values(self, df: DataFrame, bvr_name: str) -> DataFrame:
+        """Replace NaN values with defaults for behaviour columns.
+        
+        Args:
+            df: Input DataFrame
+            bvr_name: Name of the behaviour
+            
+        Returns:
+            DataFrame with NaN values replaced
+        """
+        try:
+            col_prefix = bvr_name.lower()
+            df = df.fillna({
+                f"{col_prefix}__savings": 0,
+                f"{col_prefix}__success": False,
+                f"{col_prefix}__best_case_savings": 0,
+                f"{col_prefix}__reason": ''
+            })
+            return df
+        except Exception as e:
+            logger.error(f"Error defaulting NaN values for {bvr_name}: {str(e)}")
+            raise
+
+    def _process_qualified_events(self, df: DataFrame, calculable_behaviours: List[str]) -> DataFrame:
+        """Process qualified events for behaviours.
+        
+        Args:
+            df: Input DataFrame
+            calculable_behaviours: List of behaviour names
+            
+        Returns:
+            DataFrame with qualified events processed
+        """
+        try:
+            df = self._set_qualified(df, calculable_behaviours)
+            non_qualified_count = df.filter(F.col('qualified') == False).count()
+            logger.info(f"Detected {non_qualified_count} non-qualified events")
+            return df
+        except Exception as e:
+            logger.error(f"Error processing qualified events: {str(e)}")
+            raise
+
+    def run(self, df: DataFrame, calculable_behaviours: List[str], filters_by_behaviour: Optional[Dict[str, Any]] = None) -> DataFrame:
+        """Run behaviour calculations.
+        
+        Args:
+            df: Input DataFrame
+            calculable_behaviours: List of behaviour names
+            filters_by_behaviour: Optional filters for behaviours
+            
+        Returns:
+            DataFrame with calculated behaviours
+        """
+        try:
+            df = self.preprocess_df(df)
+            
+            for behaviour_name in calculable_behaviours:
+                try:
+                    method_name = f"_calculate__{behaviour_name}"
+                    calculate_behaviour = getattr(self, method_name)
+                    logger.info(f"Calculating {behaviour_name}")
+                    
+                    df = self._init_behaviour_columns(df=df, bvr_name=behaviour_name)
+                    df = calculate_behaviour(bvr_name=behaviour_name, df=df)
+                    df = self._default_nan_values(df=df, bvr_name=behaviour_name)
+                    
+                    bvr_columns = [col for col in df.columns if col.startswith(behaviour_name.lower())]
+                    logger.info(f"Present behaviours calculated: {bvr_columns}")
+                    
+                except AttributeError:
+                    logger.error(f"Behaviour calculation method {method_name} not found")
+                    raise
+                except Exception as e:
+                    logger.error(f"Error calculating {behaviour_name}: {str(e)}")
+                    raise
+            
+            df = self._process_qualified_events(df, calculable_behaviours)
+            return df
+            
+        except Exception as e:
+            logger.error(f"Error running behaviour calculations: {str(e)}")
+            raise
 
     def _all_zero_by_condition(self, df, bvr_name: str, bool_condition=True, failed_reason='') -> DataFrame:
         col_prefix = bvr_name.lower()

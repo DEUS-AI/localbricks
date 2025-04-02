@@ -38,13 +38,19 @@ This document tracks the refactoring of the codebase to make it more generic. Th
   ✅ Verified silver_factory/silver_pydantic_validation.py (already using new terminology)
   ✅ Updated validation error messages
 
-### Phase 3: Client Job Updates
+### Phase 3: DDS Job Updates
 ✅ Review src/tasks/clients/
   ✅ Renamed directory to src/tasks/dds/
   ✅ Updated common_behaviours.py with new terminology
   ✅ Updated common_merge.py with new terminology
   ✅ Renamed import_client_module to import_dds_module
   ✅ Updated function parameters and docstrings
+✅ Improve error handling and logging
+  ✅ Added comprehensive docstrings to all methods
+  ✅ Implemented consistent error handling patterns
+  ✅ Enhanced logging with appropriate log levels
+  ✅ Added detailed error messages with context
+  ✅ Standardized exception handling across behaviours
 - [ ] Update DDS-specific job configurations
   - [ ] Review and update each DDS code's mapping.json
   - [ ] Update DDS-specific task parameters
@@ -96,6 +102,12 @@ This document tracks the refactoring of the codebase to make it more generic. Th
   - Modified `common_behaviours.py` to use `dds_code`
   - Updated `common_merge.py` to use new terminology
 - All changes have been committed and pushed to the main branch
+- Improved error handling and logging in BaseCalculatorBehaviours:
+  - Added comprehensive docstrings to all methods
+  - Implemented consistent error handling patterns
+  - Enhanced logging with appropriate log levels
+  - Added detailed error messages with context
+  - Standardized exception handling across behaviours
 
 ## Next Steps
 1. Continue with Phase 3: DDS Job Updates
