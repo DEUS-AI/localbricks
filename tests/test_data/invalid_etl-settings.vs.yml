@@ -41,6 +41,7 @@ bronze:
               header: "true"
           output_table_name: flight_data${var.tables_suffix}
         depends_on: ["Flight_Plans_task"]
+    tasks:
       complete_bronze_task:
         description: "Complete bronze task"
         python_file: "../src/tasks/bronze/complete_bronze.py"
