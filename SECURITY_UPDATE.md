@@ -24,7 +24,7 @@
 - [x] certifi (2024.2.2 -> 2025.1.31) ✓
 - [x] setuptools (69.2.0 -> 78.1.0) ✓
 - [x] great-expectations (0.18.8 -> 0.18.22) ✓
-- [ ] boto3 (1.34.110)
+- [x] boto3 (1.34.110 -> 1.37.26) ✓
 
 #### Low Severity (2)
 - To be identified from GitHub security alerts
@@ -78,7 +78,14 @@
     - Performance stable (0.20s)
     - Note: Major version 1.x available but requires significant refactoring
     - Created separate task for 1.x migration evaluation
-  - [ ] boto3: Pending
+  - [x] boto3: 1.34.110 -> 1.37.26 ✓
+    - Updated successfully with dependencies:
+      - botocore: 1.34.145 -> 1.37.26
+      - s3transfer: 0.10.2 -> 0.11.4
+    - All tests passing
+    - Performance improved (0.18s vs 0.20s)
+    - Limited usage in codebase (S3 file operations only)
+    - No breaking changes in API usage
 - [ ] Update transitive dependencies
 - [ ] Run integration tests
 
@@ -99,7 +106,24 @@
 
 ## Update History
 
-### great-expectations 0.18.8 -> 0.18.22 (Current)
+### boto3 1.34.110 -> 1.37.26 (Current)
+- Updated: March 27, 2024
+- Status: ✓ Success
+- Test Results: All passing (20/20)
+- Performance: 0.18s (improved from 0.20s)
+- Changes:
+  - Updated boto3 to latest version
+  - Updated dependencies:
+    - botocore: 1.34.145 -> 1.37.26
+    - s3transfer: 0.10.2 -> 0.11.4
+  - Limited usage in codebase:
+    - Only used for S3 file operations
+    - Simple client initialization
+    - No breaking changes in API usage
+  - All tests passing with improved performance
+  - No compatibility issues found
+
+### great-expectations 0.18.8 -> 0.18.22 (Previous)
 - Updated: March 27, 2024
 - Status: ✓ Success
 - Test Results: All passing (20/20)

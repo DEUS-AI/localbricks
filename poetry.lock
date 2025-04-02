@@ -259,32 +259,32 @@ css = ["tinycss2 (>=1.1.0,<1.3)"]
 
 [[package]]
 name = "boto3"
-version = "1.34.110"
+version = "1.37.26"
 description = "The AWS SDK for Python"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "boto3-1.34.110-py3-none-any.whl", hash = "sha256:2fc871b4a5090716c7a71af52c462e539529227f4d4888fd04896d5028f9cedc"},
-    {file = "boto3-1.34.110.tar.gz", hash = "sha256:83ffe2273da7bdfdb480d85b0705f04e95bd110e9741f23328b7c76c03e6d53c"},
+    {file = "boto3-1.37.26-py3-none-any.whl", hash = "sha256:77ff13723ad5b836a565c382610c3994e14ce643144dc9c604bfe1efb3213739"},
+    {file = "boto3-1.37.26.tar.gz", hash = "sha256:78fb57556c2337e087d2eda419ee371b52843a2420861114413791113efeabe2"},
 ]
 
 [package.dependencies]
-botocore = ">=1.34.110,<1.35.0"
+botocore = ">=1.37.26,<1.38.0"
 jmespath = ">=0.7.1,<2.0.0"
-s3transfer = ">=0.10.0,<0.11.0"
+s3transfer = ">=0.11.0,<0.12.0"
 
 [package.extras]
 crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.34.145"
+version = "1.37.26"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "botocore-1.34.145-py3-none-any.whl", hash = "sha256:2e72e262de02adcb0264ac2bac159a28f55dbba8d9e52aa0308773a42950dff5"},
-    {file = "botocore-1.34.145.tar.gz", hash = "sha256:edf0fb4c02186ae29b76263ac5fda18b0a085d334a310551c9984407cf1079e6"},
+    {file = "botocore-1.37.26-py3-none-any.whl", hash = "sha256:d499a617903cbcaae18380320125fa3a95cb625b613d746e6edc69c6f01f1326"},
+    {file = "botocore-1.37.26.tar.gz", hash = "sha256:7f6dc999e7a34c0917623aac67c9ea2389b741bb7babee1a88cf2cd04006ea7a"},
 ]
 
 [package.dependencies]
@@ -293,7 +293,7 @@ python-dateutil = ">=2.1,<3.0.0"
 urllib3 = {version = ">=1.25.4,<2.2.0 || >2.2.0,<3", markers = "python_version >= \"3.10\""}
 
 [package.extras]
-crt = ["awscrt (==0.20.11)"]
+crt = ["awscrt (==0.23.8)"]
 
 [[package]]
 name = "bracex"
@@ -2648,20 +2648,20 @@ jinja2 = ["ruamel.yaml.jinja2 (>=0.2)"]
 
 [[package]]
 name = "s3transfer"
-version = "0.10.2"
+version = "0.11.4"
 description = "An Amazon S3 Transfer Manager"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "s3transfer-0.10.2-py3-none-any.whl", hash = "sha256:eca1c20de70a39daee580aef4986996620f365c4e0fda6a86100231d62f1bf69"},
-    {file = "s3transfer-0.10.2.tar.gz", hash = "sha256:0711534e9356d3cc692fdde846b4a1e4b0cb6519971860796e6bc4c7aea00ef6"},
+    {file = "s3transfer-0.11.4-py3-none-any.whl", hash = "sha256:ac265fa68318763a03bf2dc4f39d5cbd6a9e178d81cc9483ad27da33637e320d"},
+    {file = "s3transfer-0.11.4.tar.gz", hash = "sha256:559f161658e1cf0a911f45940552c696735f5c74e64362e515f333ebed87d679"},
 ]
 
 [package.dependencies]
-botocore = ">=1.33.2,<2.0a.0"
+botocore = ">=1.37.4,<2.0a.0"
 
 [package.extras]
-crt = ["botocore[crt] (>=1.33.2,<2.0a.0)"]
+crt = ["botocore[crt] (>=1.37.4,<2.0a.0)"]
 
 [[package]]
 name = "scipy"
@@ -3117,4 +3117,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "38c4e6e4a4a520f87b0099abd7fdecbb4369f4dcd05d8037fe7883e202862d14"
+content-hash = "134891ce1d4d1bde9e3a3fc78536ac664adc9de7e34ebff27c934bee64735864"
