@@ -1,0 +1,2275 @@
+{
+    "dataMappings": {
+        "domain": "aviation",
+        "catalog": "bronze_layer.`dds-vs`.",
+        "data_frames": [
+            "flight_data",
+            "fuelburn_data"
+        ],
+        "merge_table": "merged_data",
+        "join_keys": [
+            "aircraft_reg_code",
+            "ocurrence_datetime"
+        ],
+        "dateFormat": [
+            "%Y-%m-%d %H:%M:%S",
+            "%d%m%Y %H:%Mz:%S"
+        ],
+        "calculableBehaviours": [
+            "Reduced_Engine_Taxi_Out",
+            "Reduced_Engine_Taxi_In",
+            "Efficient_Flight",
+            "Optimal_Discretionary_Fuel_Load"
+        ],
+        "filters": {
+            "Efficient_Flight": [
+                {
+                    "field_name": "vehicle",
+                    "values": [
+                        "A339"
+                    ]
+                }
+            ],
+            "Optimal_Discretionary_Fuel_Load": [],
+            "Reduced_Engine_Taxi_In": [
+                {
+                    "field_name": "destination",
+                    "values": [
+                        "ANU",
+                        "GND",
+                        "HAV",
+                        "SJU",
+                        "SVD",
+                        "TAB",
+                        "UVF"
+                    ]
+                }
+            ],
+            "Reduced_Engine_Taxi_Out": [
+                {
+                    "field_name": "vehicle",
+                    "values": [
+                        "B787",
+                        "A339"
+                    ]
+                },
+                {
+                    "field_name": "origin",
+                    "values": [
+                        "ANU",
+                        "GND",
+                        "HAV",
+                        "SJU",
+                        "SVD",
+                        "TAB",
+                        "UVF"
+                    ]
+                }
+            ]
+        },
+        "csvFields": [
+            {
+                "name": "event_id",
+                "type": "string",
+                "options": [],
+                "eventType": "*",
+                "formula": "uuid()"
+            },
+            {
+                "name": "event_openid",
+                "type": "string",
+                "options": [
+                    "operation id"
+                ],
+                "eventType": "*"
+            },
+            {
+                "name": "event_deus_id",
+                "type": "string",
+                "options": ["GlobalFlightId", "globalflightid"],
+                "eventType": "*"
+            },
+            {
+                "name": "dds_code",
+                "type": "string",
+                "options": [],
+                "eventType": "*"
+            },
+            {
+                "name": "operator_id",
+                "type": "string",
+                "options": [
+                    "acarsoncaptainid",
+                    "capt id",
+                    "driver id",
+                    "captainpayroll"
+                ],
+                "eventType": "*"
+            },
+            {
+                "name": "operator_name",
+                "type": "string",
+                "options": [
+                    "capt first name"
+                ],
+                "eventType": "*"
+            },
+            {
+                "name": "operator_lastname",
+                "type": "string",
+                "options": [
+                    "capt surname"
+                ],
+                "eventType": "*"
+            },
+            {
+                "name": "role_alias",
+                "type": "string",
+                "options": [],
+                "eventType": "FLIGHT",
+                "default_value": "Captain"
+            },
+            {
+                "name": "ocurrence_datetime",
+                "type": "date",
+                "options": [
+                    "atdutc",
+                    "atdutc",
+                    "utcatd",
+                    "dep datetime",
+                    "departure time"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "identifier",
+                "type": "number",
+                "options": [
+                    "flight num",
+                    "flight number",
+                    "flightnumber"
+                ],
+                "regex": "^[0|\\D]*|[\\D]*$",
+                "required": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "aircraft_reg_code",
+                "type": "string",
+                "options": [
+                    "aircraft registration",
+                    "aircraft",
+                    "aircraftreg"
+                ],
+                "required": true,
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "vehicle",
+                "type": "string",
+                "options": [
+                    "aircraft type"
+                ],
+                "state": {
+                    "B789": [
+                        "Z1",
+                        "Z2"
+                    ],
+                    "B787": [
+                        "G-VAHH",
+                        "G-VBEL",
+                        "G-VBOW",
+                        "G-VBZZ",
+                        "G-VCRU",
+                        "G-VDIA",
+                        "G-VFAN",
+                        "G-VMAP",
+                        "G-VNEW",
+                        "G-VNYL",
+                        "G-VOOH",
+                        "G-VOWS",
+                        "G-VSPY",
+                        "G-VWHO",
+                        "G-VWOO",
+                        "G-VYUM",
+                        "G-VZIG"
+                    ],
+                    "B744": [
+                        "G-VAST",
+                        "G-VBIG",
+                        "G-VGAL",
+                        "G-VLIP",
+                        "G-VROM",
+                        "G-VROS",
+                        "G-VROY",
+                        "G-VXLG"
+                    ],
+                    "A330": [
+                        "G-VGBR",
+                        "G-VLUV",
+                        "G-VGEM",
+                        "G-VINE",
+                        "G-VKSS",
+                        "G-VNYC",
+                        "G-VRAY",
+                        "G-VSXY",
+                        "G-VUFO",
+                        "G-VWAG"
+                    ],
+                    "A332": [
+                        "G-VLNM",
+                        "G-VMIK",
+                        "G-VMNK",
+                        "G-VWND"
+                    ],
+                    "A339": [
+                        "G-VJAZ",
+                        "G-VLDY",
+                        "G-VTOM",
+                        "G-VEII"
+                    ],
+                    "A346": [
+                        "G-VBUG",
+                        "G-VFIT",
+                        "G-VFIZ",
+                        "G-VNAP",
+                        "G-VRED",
+                        "G-VWEB",
+                        "G-VWIN",
+                        "G-VYOU"
+                    ],
+                    "A351": [
+                        "G-VLUX",
+                        "G-VPOP",
+                        "G-VPRD",
+                        "G-VJAM",
+                        "G-VDOT",
+                        "G-VRNB",
+                        "G-VTEA",
+                        "G-VEVE",
+                        "G-VLIB",
+                        "G-VBOB"
+                    ]
+                },
+                "formula": "true",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "origin",
+                "type": "string",
+                "options": [
+                    "origin iata",
+                    "dep iata",
+                    "dep airport code",
+                    "depactual"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "destination",
+                "type": "string",
+                "options": [
+                    "destination iata",
+                    "arr iata",
+                    "arr airport code",
+                    "arractual"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_departure_time",
+                "type": "date",
+                "options": [
+                    "std utc",
+                    "utc std"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_takeoff_time",
+                "type": "date",
+                "options": [
+                    "takeoff utc",
+                    "utc off time"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_arrival_time",
+                "type": "date",
+                "options": [
+                    "sta utc",
+                    "utc sta"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "arrival_datetime",
+                "type": "date",
+                "options": [
+                    "ata utc",
+                    "utc ata",
+                    "arr datetime",
+                    "act arrival time"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_landing_time",
+                "type": "date",
+                "options": [
+                    "touchdown utc",
+                    "utc on time",
+                    "touchdown_utc"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_bloff_time",
+                "type": "date",
+                "options": [
+                    "blockoff utc",
+                    "utc out time"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_blon_time",
+                "type": "date",
+                "options": [
+                    "ata_utc"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_flight_time_secs",
+                "type": "number",
+                "options": [
+                    "planned flt time"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "cruise_duration",
+                "type": "number",
+                "options": [
+                    "duration cruise0 min",
+                    "duration cruise 0 min"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "approach_duration",
+                "type": "number",
+                "options": [
+                    "duration approach0 min",
+                    "duration approach 0 min"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "landing_duration",
+                "type": "number",
+                "options": [
+                    "duration landing0 min",
+                    "duration landing 0 min"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "toc_duration",
+                "type": "number",
+                "options": [
+                    "duration climb0 min",
+                    "duration climb 0 min"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "tod_duration",
+                "type": "number",
+                "options": [
+                    "duration descent0 min",
+                    "duration descent 0 min"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_zero_fuel_weight",
+                "type": "number",
+                "options": [
+                    "fpplannedzerofuelmass",
+                    "planned zfw"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_zero_fuel_weight",
+                "type": "number",
+                "options": [
+                    "zfw"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_zero_fuel_weight_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['act_zero_fuel_weight_kg'] = np.where(data['vehicle'] == 'B787', data['act_zero_fuel_weight'] * 0.454, data['act_zero_fuel_weight'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_takeoff_weight",
+                "type": "number",
+                "options": [
+                    "fpplannedtakeoffmass",
+                    "planned tow"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_takeoff_weight",
+                "type": "number",
+                "options": [
+                    "weight take off0 kg",
+                    "weight take off 0 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_landing_weight",
+                "type": "number",
+                "options": [
+                    "fpplannedlandingmass",
+                    "planned law"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_landing_weight",
+                "type": "number",
+                "options": [
+                    "weight landing0 kg",
+                    "weight landing 0 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_trip_fuel",
+                "type": "number",
+                "options": [
+                    "fpplannedtripfuel",
+                    "planned trip fuel"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_contingency_fuel",
+                "type": "number",
+                "options": [
+                    "fpplannedcontingencyfuel",
+                    "planned contingency fuel"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_alternate_fuel",
+                "type": "number",
+                "options": [
+                    "fpplannedalternatefuel",
+                    "planned alt fuel"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_extra_fuel",
+                "type": "number",
+                "options": [
+                    "fpplannedextrafuel",
+                    "planned extra fuel"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_tanker_fuel",
+                "type": "number",
+                "options": [
+                    "planned tanker fuel",
+                    "fpplannedextrafuel"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_reserve_fuel",
+                "type": "number",
+                "options": [
+                    "planned final reserve"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_final_reserve_fuel",
+                "type": "number",
+                "options": [
+                    "fpplannedfinalreserve"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_taxi_fuel",
+                "type": "number",
+                "options": [
+                    "fpplannedtaxifuel",
+                    "planned taxi fuel"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_block_fuel",
+                "type": "number",
+                "options": [
+                    "fpplannedblockfuel",
+                    "planned ramp fuel"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_target_fuel",
+                "type": "number",
+                "options": [
+                    "fpplannedtouchdownfuel",
+                    "planned touchdown fuel"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_bloff_fuel",
+                "type": "number",
+                "options": [
+                    "acarsoutfuel kg",
+                    "out fuel",
+                    "loadsheet to fuel"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_blon_fuel",
+                "type": "number",
+                "options": [
+                    "acarsinfuel kg",
+                    "in fuel"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "max_cruise_alt",
+                "type": "number",
+                "options": [
+                    "altitude top of climb0 ft",
+                    "altitude top of climb 0 ft"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_cruise_alt",
+                "type": "number",
+                "options": [
+                    "average altitude between toc and tod0 ft"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "toc_altitude",
+                "type": "number",
+                "options": [
+                    "altitude top of climb0 ft",
+                    "altitude top of climb 0 ft"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "toc_weight",
+                "type": "number",
+                "options": [
+                    "weight top of climb0 kg",
+                    "weight top of climb 0 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "tod_altitude",
+                "type": "number",
+                "options": [
+                    "altitude top of descent0 ft",
+                    "altitude top of descent 0 ft"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "tod_weight",
+                "type": "number",
+                "options": [
+                    "weight top of descent0 kg",
+                    "weight top of descent 0 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "departure_rwy",
+                "type": "string",
+                "options": [
+                    "dep rwy",
+                    "planned departure rwy"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "arrival_rwy",
+                "type": "string",
+                "options": [
+                    "arr rwy",
+                    "planned arrival rwy"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "state",
+                "type": "string",
+                "options": [
+                    "state name"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "state_start",
+                "type": "string",
+                "options": [
+                    "state start"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "state_end",
+                "type": "string",
+                "options": [
+                    "state end"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "state_duration",
+                "type": "string",
+                "options": [
+                    "state duration"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "air_distance_climb",
+                "type": "number",
+                "options": [
+                    "air distance climb0 nm",
+                    "air distance climb 0 nm"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "air_distance_cruise",
+                "type": "number",
+                "options": [
+                    "air distance cruise0 nm",
+                    "air distance cruise 0 nm"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "air_distance_descent",
+                "type": "number",
+                "options": [
+                    "air distance descent0 nm",
+                    "air distance descent 0 nm"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "air_distance_approach",
+                "type": "number",
+                "options": [
+                    "air distance approach0 nm",
+                    "air distance approach 0 nm"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "air_distance_landing",
+                "type": "number",
+                "options": [
+                    "air distance landing0 nm",
+                    "air distance landing 0 nm"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_climb1",
+                "type": "number",
+                "options": [
+                    "fuel burn climb1 kg",
+                    "fuel burn climb 1 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_climb1_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_climb1_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_climb1'] * 0.454, data['fuel_burn_climb1'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_climb2",
+                "type": "number",
+                "options": [
+                    "fuel burn climb2 kg",
+                    "fuel burn climb 2 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_climb2_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_climb2_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_climb2'] * 0.454, data['fuel_burn_climb2'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_climb3",
+                "type": "number",
+                "options": [
+                    "fuel burn climb3 kg",
+                    "fuel burn climb 3 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_climb3_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_climb3_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_climb3'] * 0.454, data['fuel_burn_climb3'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_climb4",
+                "type": "number",
+                "options": [
+                    "fuel burn climb4 kg",
+                    "fuel burn climb 4 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_climb4_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_climb4_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_climb4'] * 0.454, data['fuel_burn_climb4'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_cruise1",
+                "type": "number",
+                "options": [
+                    "fuel burn cruise1 kg",
+                    "fuel burn cruise 1 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_cruise1_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_cruise1_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_cruise1'] * 0.454, data['fuel_burn_cruise1'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_cruise2",
+                "type": "number",
+                "options": [
+                    "fuel burn cruise2 kg",
+                    "fuel burn cruise 2 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_cruise2_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_cruise2_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_cruise2'] * 0.454, data['fuel_burn_cruise2'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_cruise3",
+                "type": "number",
+                "options": [
+                    "fuel burn cruise3 kg",
+                    "fuel burn cruise 3 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_cruise3_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_cruise3_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_cruise3'] * 0.454, data['fuel_burn_cruise3'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_cruise4",
+                "type": "number",
+                "options": [
+                    "fuel burn cruise4 kg",
+                    "fuel burn cruise 4 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_cruise4_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_cruise4_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_cruise4'] * 0.454, data['fuel_burn_cruise4'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_descent1",
+                "type": "number",
+                "options": [
+                    "fuel burn descent1 kg",
+                    "fuel burn descent 1 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_descent1_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_descent1_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_descent1'] * 0.454, data['fuel_burn_descent1'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_descent2",
+                "type": "number",
+                "options": [
+                    "fuel burn descent2 kg",
+                    "fuel burn descent 2 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_descent2_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_descent2_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_descent2'] * 0.454, data['fuel_burn_descent2'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_descent3",
+                "type": "number",
+                "options": [
+                    "fuel burn descent3 kg",
+                    "fuel burn descent 3 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_descent3_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_descent3_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_descent3'] * 0.454, data['fuel_burn_descent3'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_descent4",
+                "type": "number",
+                "options": [
+                    "fuel burn descent4 kg",
+                    "fuel burn descent 4 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_descent4_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_descent4_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_descent4'] * 0.454, data['fuel_burn_descent4'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_approach1",
+                "type": "number",
+                "options": [
+                    "fuel burn approach1 kg",
+                    "fuel burn approach 1 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_approach1_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_approach1_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_approach1'] * 0.454, data['fuel_burn_approach1'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_approach2",
+                "type": "number",
+                "options": [
+                    "fuel burn approach2 kg",
+                    "fuel burn approach 2 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_approach2_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_approach2_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_approach2'] * 0.454, data['fuel_burn_approach2'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_approach3",
+                "type": "number",
+                "options": [
+                    "fuel burn approach3 kg",
+                    "fuel burn approach 3 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_approach3_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_approach3_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_approach3'] * 0.454, data['fuel_burn_approach3'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_approach4",
+                "type": "number",
+                "options": [
+                    "fuel burn approach4 kg",
+                    "fuel burn approach 4 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_approach4_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_approach4_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_approach4'] * 0.454, data['fuel_burn_approach4'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_landing1",
+                "type": "number",
+                "options": [
+                    "fuel burn landing1 kg",
+                    "fuel burn landing 1 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_landing1_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_landing1_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_landing1'] * 0.454, data['fuel_burn_landing1'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_landing2",
+                "type": "number",
+                "options": [
+                    "fuel burn landing2 kg",
+                    "fuel burn landing 2 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_landing2_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_landing2_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_landing2'] * 0.454, data['fuel_burn_landing2'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_landing3",
+                "type": "number",
+                "options": [
+                    "fuel burn landing3 kg",
+                    "fuel burn landing 3 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_landing3_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_landing3_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_landing3'] * 0.454, data['fuel_burn_landing3'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_landing4",
+                "type": "number",
+                "options": [
+                    "fuel burn landing4 kg",
+                    "fuel burn landing 4 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_landing4_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_landing4_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_landing4'] * 0.454, data['fuel_burn_landing4'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "ground_distance_climb",
+                "type": "number",
+                "options": [
+                    "ground distance climb0 nm",
+                    "ground distance climb 0 nm"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "ground_distance_cruise",
+                "type": "number",
+                "options": [
+                    "ground distance cruise0 nm",
+                    "ground distance cruise 0 nm"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "ground_distance_descent",
+                "type": "number",
+                "options": [
+                    "ground distance descent0 nm",
+                    "ground distance descent 0 nm"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "ground_distance_approach",
+                "type": "number",
+                "options": [
+                    "ground distance approach0 nm",
+                    "ground distance approach 0 nm"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "ground_distance_landing",
+                "type": "number",
+                "options": [
+                    "ground distance landing0 nm",
+                    "ground distance landing 0 nm"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "mach_cruise_max_for_5_mins",
+                "type": "number",
+                "options": [
+                    "mach cruise max for 5 mins0 m"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "mach_cruise_mean",
+                "type": "number",
+                "options": [
+                    "mach cruise mean0 m",
+                    "mach cruise mean 0 m"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "centre_of_gravity",
+                "type": "number",
+                "options": [
+                    "centre of gravity"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_taxi_out1",
+                "type": "number",
+                "options": [
+                    "fuel burn taxi out1 kg",
+                    "fuel burn taxi out 1 kg"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_taxi_out2",
+                "type": "number",
+                "options": [
+                    "fuel burn taxi out2 kg",
+                    "fuel burn taxi out 2 kg"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_taxi_out3",
+                "type": "number",
+                "options": [
+                    "fuel burn taxi out3 kg",
+                    "fuel burn taxi out 3 kg"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_taxi_out4",
+                "type": "number",
+                "options": [
+                    "fuel burn taxi out4 kg",
+                    "fuel burn taxi out 4 kg"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_taxi_out1_kg",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "state": {},
+                "formula": "data['fuel_burn_taxi_out1_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_taxi_out1'] * 0.454, data['fuel_burn_taxi_out1'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_taxi_out2_kg",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "state": {},
+                "formula": "data['fuel_burn_taxi_out2_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_taxi_out2'] * 0.454, data['fuel_burn_taxi_out2'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_taxi_out3_kg",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "state": {},
+                "formula": "data['fuel_burn_taxi_out3_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_taxi_out3'] * 0.454, data['fuel_burn_taxi_out3'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_taxi_out4_kg",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "state": {},
+                "formula": "data['fuel_burn_taxi_out4_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_taxi_out4'] * 0.454, data['fuel_burn_taxi_out4'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_take_off1",
+                "type": "number",
+                "options": [
+                    "fuel burn take off1 kg",
+                    "fuel burn take off 1 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_take_off1_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_take_off1_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_take_off1'] * 0.454, data['fuel_burn_take_off1'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_take_off2",
+                "type": "number",
+                "options": [
+                    "fuel burn take off2 kg",
+                    "fuel burn take off 2 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_take_off2_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_take_off2_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_take_off2'] * 0.454, data['fuel_burn_take_off2'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_take_off3",
+                "type": "number",
+                "options": [
+                    "fuel burn take off3 kg",
+                    "fuel burn take off 3 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_take_off3_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_take_off3_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_take_off3'] * 0.454, data['fuel_burn_take_off3'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_take_off4",
+                "type": "number",
+                "options": [
+                    "fuel burn take off4 kg",
+                    "fuel burn take off 4 kg"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_take_off4_kg",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_take_off4_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_take_off4'] * 0.454, data['fuel_burn_take_off4'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "flap_retraction_altitude",
+                "type": "number",
+                "options": [
+                    "flap retraction altitude"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "duration_to_clean_config",
+                "type": "number",
+                "options": [
+                    "duration to clean config"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "average_wind_speed_component",
+                "type": "number",
+                "options": [
+                    "average wind speed component"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "landing_flap_setting",
+                "type": "number",
+                "options": [
+                    "landing flap setting"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_taxi_in1",
+                "type": "number",
+                "options": [
+                    "fuel burn taxi in1 kg",
+                    "fuel burn taxi in 1 kg"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_taxi_in2",
+                "type": "number",
+                "options": [
+                    "fuel burn taxi in2 kg",
+                    "fuel burn taxi in 2 kg"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_taxi_in3",
+                "type": "number",
+                "options": [
+                    "fuel burn taxi in3 kg",
+                    "fuel burn taxi in 3 kg"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_taxi_in4",
+                "type": "number",
+                "options": [
+                    "fuel burn taxi in4 kg",
+                    "fuel burn taxi in 4 kg"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_taxi_in1_kg",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "state": {},
+                "formula": "data['fuel_burn_taxi_in1_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_taxi_in1'] * 0.454, data['fuel_burn_taxi_in1'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_taxi_in2_kg",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "state": {},
+                "formula": "data['fuel_burn_taxi_in2_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_taxi_in2'] * 0.454, data['fuel_burn_taxi_in2'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_taxi_in3_kg",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "state": {},
+                "formula": "data['fuel_burn_taxi_in3_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_taxi_in3'] * 0.454, data['fuel_burn_taxi_in3'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_taxi_in4_kg",
+                "type": "number",
+                "options": [],
+                "is_metadata": true,
+                "state": {},
+                "formula": "data['fuel_burn_taxi_in4_kg'] = np.where(data['vehicle'] == 'B787', data['fuel_burn_taxi_in4'] * 0.454, data['fuel_burn_taxi_in4'])",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "take_off_thrust",
+                "type": "number",
+                "options": [
+                    "take off thrust"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "take_off_flap",
+                "type": "number",
+                "options": [
+                    "take off flap"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "flight_type",
+                "type": "string",
+                "options": [
+                    "flighttypecode",
+                    "flight type"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "uplift_measure",
+                "type": "string",
+                "options": [
+                    "uplift measure"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "specific_gravity",
+                "type": "number",
+                "options": [
+                    "acarsspecificgravity",
+                    "specific gravity"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "uplift_quantity",
+                "type": "number",
+                "options": [
+                    "acarsupliftfuel kg",
+                    "uplift quantity"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "planned_cost_index",
+                "type": "number",
+                "options": [
+                    "fpcostindex",
+                    "planned cost index"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "planned_alt_apt",
+                "type": "string",
+                "options": [
+                    "fpdestaltiatacode",
+                    "planned alt apt"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "planned_etp_adj",
+                "type": "number",
+                "options": [
+                    "fpplannedetpadjfuel",
+                    "planned etp adj"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_additional_dep_fuel",
+                "type": "number",
+                "options": [
+                    "planned additional fuel"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "planned_unusable_fuel",
+                "type": "number",
+                "options": [
+                    "planned unusable fuel"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "planned_arrival_delay_fuel",
+                "type": "number",
+                "options": [
+                    "fpplannedarrivaldelayfuel",
+                    "planned arrival delay fuel"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "planned_arrival_delay_time",
+                "type": "number",
+                "options": [
+                    "fpplannedarrivaldelaytime",
+                    "planned arrival delay time"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "planned_to_fuel",
+                "type": "number",
+                "options": [
+                    "planned to fuel"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "planned_average_altitude",
+                "type": "number",
+                "options": [
+                    "fpaveragealtitude",
+                    "planned average altitude"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "planned_flight_plan_distance",
+                "type": "number",
+                "options": [
+                    "fpgrounddistance",
+                    "planned flight plan distance"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "planned_average_wind_component",
+                "type": "number",
+                "options": [
+                    "planned average wind component"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "planned_fuel_burn_adjustment",
+                "type": "number",
+                "options": [
+                    "fpfuelburnadjustment",
+                    "planned fuel burn adjustment"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "taxi_out_time_sched",
+                "type": "number",
+                "options": [
+                    "taxiouttimesched"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "taxi_in_time_sched",
+                "type": "number",
+                "options": [
+                    "taxiintimesched"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "planned_taxi_time",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['planned_taxi_time'] = np.where(data['planned_taxi_time'].notna(), data['planned_taxi_time'], np.where((data.taxi_in_time_sched + data.taxi_out_time_sched > 0), data.taxi_in_time_sched + data.taxi_out_time_sched, 0))\nif 'taxi_in_time_sched' not in data:\n\tdata['planned_taxi_time'] = data['planned_taxi_time'].fillna(0).astype(float)",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "potable_water_at_departure",
+                "type": "number",
+                "options": [
+                    "potable water at departure"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "potable_water_at_arrival",
+                "type": "number",
+                "options": [
+                    "potable water at arrival"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "performance_decrement",
+                "type": "number",
+                "options": [
+                    "performance decrement"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "mel_decrement",
+                "type": "number",
+                "options": [
+                    "melfueldecrement",
+                    "mel decrement"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "loadsheet_zfw",
+                "type": "number",
+                "options": [
+                    "lszerofuelweight",
+                    "loadsheet zfw"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "loadsheet_mac_zfw",
+                "type": "number",
+                "options": [
+                    "mac zfw",
+                    "loadsheet mac zfw"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "loadsheet_mac_tow",
+                "type": "number",
+                "options": [
+                    "mac tow",
+                    "loadsheet mac tow"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "loadsheet_tow",
+                "type": "number",
+                "options": [
+                    "lstakeoffweight",
+                    "loadsheet tow"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "loadsheet_law",
+                "type": "number",
+                "options": [
+                    "lslandingweight",
+                    "loadsheet law"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "loadsheet_pot_water",
+                "type": "number",
+                "options": [
+                    "potablewaterlitres",
+                    "loadsheet pot water"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "loadsheet_net_cargo_wgt",
+                "type": "number",
+                "options": [
+                    "lscargoweight",
+                    "loadsheet net cargo wgt"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "total_pax_qty",
+                "type": "number",
+                "options": [
+                    "paxontotal",
+                    "total pax"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "adult_pax",
+                "type": "number",
+                "options": [
+                    "lspaxadult",
+                    "adult pax"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "infant_pax",
+                "type": "number",
+                "options": [
+                    "lspaxinfant",
+                    "infant pax"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "non_revenue_pax",
+                "type": "number",
+                "options": [
+                    "non revenue pax"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "additional_fuel_uplift_amount",
+                "type": "number",
+                "options": [
+                    "fueladditionalfuelamount",
+                    "additional fuel uplift amount"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "addnl_fuel_code",
+                "type": "string",
+                "options": [
+                    "fueladditionalfuelcode",
+                    "addnl fuel code"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "additional_comments",
+                "type": "string",
+                "options": [
+                    "comments",
+                    "addnl fuel description"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "additional_fuel_comments",
+                "type": "string",
+                "options": [
+                    "fueladditionalfuelreason"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "gcd",
+                "type": "number",
+                "options": [
+                    "gcd"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "route_distance",
+                "type": "number",
+                "options": [
+                    "routedistancekilometers",
+                    "route distance"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_type",
+                "type": "string",
+                "options": [
+                    "fuel type"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "annex_1",
+                "type": "string",
+                "options": [
+                    "annex 1"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_supplier",
+                "type": "string",
+                "options": [
+                    "fuel supplier"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_invoice_number",
+                "type": "number",
+                "options": [
+                    "fuel invoice number"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "seated_capacity",
+                "type": "number",
+                "options": [
+                    "capacitytotal",
+                    "seated capacity"
+                ],
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "taxi_in_minutes_measurement",
+                "type": "number",
+                "options": [
+                    "duration taxi in0 min",
+                    "duration taxi in 0 min",
+                    "taxiintimeactual"
+                ],
+                "eventType": "FLIGHT",
+                "default_value": 0
+            },
+            {
+                "name": "taxi_out_minutes_measurement",
+                "type": "number",
+                "options": [
+                    "duration taxi out0 min",
+                    "duration taxi out 0 min",
+                    "taxiouttimeactual"
+                ],
+                "eventType": "FLIGHT",
+                "default_value": 0
+            },
+            {
+                "name": "taxi_in_minutes",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['taxi_in_minutes'] = np.where((data['act_blon_time'].notna()) & (data['act_landing_time'].notna()), (data.act_blon_time - data.act_landing_time).dt.total_seconds() / 60, data.taxi_in_minutes_measurement)",
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "taxi_out_minutes",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['taxi_out_minutes'] = np.where((data['act_takeoff_time'].notna()) & (data['act_bloff_time'].notna()) & ((data.act_takeoff_time - data.act_bloff_time).dt.total_seconds() > 0), (data.act_takeoff_time - data.act_bloff_time).dt.total_seconds() / 60, data.taxi_out_minutes_measurement)",
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_taxi_in_fuel_engines",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "is_metadata": true,
+                "formula": "data['act_taxi_in_fuel_engines'] = data[['fuel_burn_taxi_in1_kg', 'fuel_burn_taxi_in2_kg', 'fuel_burn_taxi_in3_kg', 'fuel_burn_taxi_in4_kg']].sum(axis=1)",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_taxi_out_fuel_engines",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "is_metadata": true,
+                "formula": "data['act_taxi_out_fuel_engines'] = data[['fuel_burn_taxi_out1_kg', 'fuel_burn_taxi_out2_kg', 'fuel_burn_taxi_out3_kg', 'fuel_burn_taxi_out4_kg']].sum(axis=1)",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_taxi_in_fuel_burn",
+                "type": "number",
+                "options": [
+                    "taxiinburn"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT",
+                "default_value": -1
+            },
+            {
+                "name": "act_taxi_out_fuel_burn",
+                "type": "number",
+                "options": [
+                    "taxioutburn"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT",
+                "default_value": -1
+            },
+            {
+                "name": "act_taxi_in_fuel",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "is_metadata": true,
+                "formula": "data['act_taxi_in_fuel'] = np.where((data.act_taxi_in_fuel_engines.notna()) & (data.act_taxi_in_fuel_engines > 0), data.act_taxi_in_fuel_engines, data.act_taxi_in_fuel_burn)",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_taxi_out_fuel",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "is_metadata": true,
+                "formula": "data['act_taxi_out_fuel'] = np.where((data.act_taxi_out_fuel_engines.notna()) & (data.act_taxi_out_fuel_engines > 0), data.act_taxi_out_fuel_engines, data.act_taxi_out_fuel_burn)",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_climb_fuel",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['act_climb_fuel'] = data[['fuel_burn_climb1_kg', 'fuel_burn_climb2_kg', 'fuel_burn_climb3_kg', 'fuel_burn_climb4_kg']].sum(axis=1)",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_cruise_fuel",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['act_cruise_fuel'] = data[['fuel_burn_cruise1_kg', 'fuel_burn_cruise2_kg', 'fuel_burn_cruise3_kg', 'fuel_burn_cruise4_kg']].sum(axis=1)",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_descent_fuel",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['act_descent_fuel'] = data[['fuel_burn_descent1_kg', 'fuel_burn_descent2_kg', 'fuel_burn_descent3_kg', 'fuel_burn_descent4_kg']].sum(axis=1)",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_approach_fuel",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['act_approach_fuel'] = data[['fuel_burn_approach1_kg', 'fuel_burn_approach2_kg', 'fuel_burn_approach3_kg', 'fuel_burn_approach4_kg']].sum(axis=1)",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_reti_main_engine",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_reti_main_engine'] = data[['fuel_burn_taxi_in1_kg', 'fuel_burn_taxi_in2_kg', 'fuel_burn_taxi_in3_kg', 'fuel_burn_taxi_in4_kg']].max(axis=1)",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_reto_main_engine",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['fuel_burn_reto_main_engine'] = data[['fuel_burn_taxi_out1_kg', 'fuel_burn_taxi_out2_kg', 'fuel_burn_taxi_out3_kg', 'fuel_burn_taxi_out4_kg']].max(axis=1)",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "total_expected_fuel",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['total_expected_fuel'] = data['plnd_block_fuel'] * 1.005",
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "projected_trip_fuel",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['projected_trip_fuel'] = data['plnd_trip_fuel'] * 1.005",
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_takeoff_fuel",
+                "type": "number",
+                "options": [
+                    "off fuel",
+                    "offfuel"
+                ],
+                "state": {},
+                "is_metadata": true,
+                "formula": "data['act_takeoff_fuel'] = np.where((data.act_bloff_fuel.notna()) & (data.act_taxi_out_fuel.notna()) & (data.act_taxi_out_fuel >= 0), data.act_bloff_fuel - data.act_taxi_out_fuel, data.act_takeoff_fuel)",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_landing_fuel",
+                "type": "number",
+                "options": [
+                    "on fuel",
+                    "onfuel"
+                ],
+                "state": {},
+                "is_metadata": true,
+                "formula": "data['act_landing_fuel'] = np.where((data.act_blon_fuel.notna()) & (data.act_taxi_in_fuel.notna()) & (data.act_taxi_in_fuel >= 0), data.act_blon_fuel + data.act_taxi_in_fuel, data.act_landing_fuel)",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "act_trip_fuel",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['act_trip_fuel'] = data.act_takeoff_fuel - data.act_landing_fuel",
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_flight_time",
+                "type": "number",
+                "options": [
+                    "fpflighttime"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_flight_time_hs",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['plnd_flight_time_hs'] = np.where(data['plnd_flight_time'].notna(), data['plnd_flight_time'] / 60, data.plnd_flight_time_secs / 60 / 60)",
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "actual_flight_time",
+                "type": "number",
+                "options": [
+                    "flighttimeactual"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "actual_flight_time_hs",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['actual_flight_time_hs'] = np.where(data['actual_flight_time'].notna(), data['actual_flight_time'] / 60, (data.cruise_duration + data.approach_duration + data.landing_duration + data.toc_duration + data.tod_duration ) / 60)",
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "plnd_airborne_time",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['plnd_airborne_time'] = np.where(data['plnd_flight_time'].notna(), data['plnd_flight_time'],(((pd.to_datetime(data.plnd_arrival_time) - pd.to_datetime(data.plnd_departure_time)).dt.total_seconds() / 60) - np.where('planned_taxi_time' in data, data.planned_taxi_time, 0)) / 60)",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "airborne_time",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['airborne_time'] = np.where(data['actual_flight_time_hs'].notna(), data['actual_flight_time_hs'], (((pd.to_datetime(data.arrival_datetime) - pd.to_datetime(data.ocurrence_datetime)).dt.total_seconds() / 60) - data.taxi_in_minutes - data.taxi_out_minutes) / 60)",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "duration",
+                "type": "string",
+                "options": [
+                    "haul type"
+                ],
+                "state": {},
+                "formula": "data['duration'] = pd.cut(pd.to_numeric(data.airborne_time, downcast='integer', errors='coerce'), bins=[0,3,6,100], labels=['SHORT', 'MID', 'LONG'])",
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "weekday",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['weekday'] = pd.to_datetime(data.ocurrence_datetime).dt.dayofweek",
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "temperature",
+                "type": "number",
+                "options": [],
+                "state": {},
+                "formula": "data['temperature'] = 0",
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "team_name",
+                "type": "string",
+                "options": [],
+                "state": {
+                    "non-B787": "VSDefaultTeam",
+                    "B787": "VS B787 Team"
+                },
+                "formula": "data['team_name'] = np.where(data['vehicle'].str.startswith('B78'), 'VS B787 Team', 'VSDefaultTeam')",
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "discretionary_fuel",
+                "type": "number",
+                "options": [
+                    "discretionaryfuel"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "discretionary_fuel_needed",
+                "type": "number",
+                "options": [],
+                "eventType": "FLIGHT",
+                "is_metadata": true
+            },
+            {
+                "name": "discretionary_fuel_loaded",
+                "type": "number",
+                "options": [],
+                "eventType": "FLIGHT",
+                "is_metadata": true
+            },
+            {
+                "name": "discretionary_fuel_loaded_penalty",
+                "type": "number",
+                "options": [],
+                "eventType": "FLIGHT",
+                "is_metadata": true
+            },
+            {
+                "name": "block_time_actual",
+                "type": "number",
+                "options": [
+                    "blocktimeactual"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "block_time_sched",
+                "type": "number",
+                "options": [
+                    "blocktimesched"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "revised_planned_td_fuel",
+                "type": "number",
+                "options": [
+                    "revisedplannedtdfuel"
+                ],
+                "is_metadata": true,
+                "eventType": "FLIGHT"
+            },
+            {
+                "name": "fuel_burn_reto_1_without_warmup",
+                "type": "number",
+                "options": [],
+                "eventType": "FLIGHT",
+                "is_metadata": true,
+                "default_value": 0
+            },
+            {
+                "name": "fuel_burn_reto_2_without_warmup",
+                "type": "number",
+                "options": [],
+                "eventType": "FLIGHT",
+                "is_metadata": true,
+                "default_value": 0
+            },
+            {
+                "name": "fuel_burn_reto_3_without_warmup",
+                "type": "number",
+                "options": [],
+                "eventType": "FLIGHT",
+                "is_metadata": true,
+                "default_value": 0
+            },
+            {
+                "name": "fuel_burn_reto_4_without_warmup",
+                "type": "number",
+                "options": [],
+                "eventType": "FLIGHT",
+                "is_metadata": true,
+                "default_value": 0
+            },
+            {
+                "name": "fuel_burn_reti_1_without_cooldown",
+                "type": "number",
+                "options": [],
+                "eventType": "FLIGHT",
+                "is_metadata": true,
+                "default_value": 0
+            },
+            {
+                "name": "fuel_burn_reti_2_without_cooldown",
+                "type": "number",
+                "options": [],
+                "eventType": "FLIGHT",
+                "is_metadata": true,
+                "default_value": 0
+            },
+            {
+                "name": "fuel_burn_reti_3_without_cooldown",
+                "type": "number",
+                "options": [],
+                "eventType": "FLIGHT",
+                "is_metadata": true,
+                "default_value": 0
+            },
+            {
+                "name": "fuel_burn_reti_4_without_cooldown",
+                "type": "number",
+                "options": [],
+                "eventType": "FLIGHT",
+                "is_metadata": true,
+                "default_value": 0
+            },
+            {
+                "name": "constant_df_buffer",
+                "type": "number",
+                "options": [],
+                "eventType": "FLIGHT",
+                "is_metadata": true,
+                "default_value": 350
+            },
+            {
+                "name": "constant_reti_threshold",
+                "type": "number",
+                "options": [],
+                "eventType": "FLIGHT",
+                "is_metadata": true,
+                "default_value": 0.2
+            },
+            {
+                "name": "constant_reti_cooldown_time",
+                "type": "number",
+                "options": [],
+                "state": {
+                    "A351": 5,
+                    "A330": 1,
+                    "A339": 5,
+                    "B787": 5,
+                    "A332": 5,
+                    "A346": 5,
+                    "B744": 3
+                },
+                "formula": "data['constant_reti_cooldown_time'] = None\ncooldowntime = []\nfor index, row in data.iterrows():\n\ttry:\n\t\tfound = False\n\t\tfor model in state.keys():\n\t\t\tif row['vehicle'] == model:\n\t\t\t\tcooldowntime.append(state[model])\n\t\t\t\tfound = True\n\t\tif not found:\n\t\t\tcooldowntime.append(3)\n\texcept Exception as e:\n\t\tcooldowntime.append(None)\ndata['constant_reti_cooldown_time'] = cooldowntime",
+                "eventType": "FLIGHT",
+                "is_metadata": true
+            },
+            {
+                "name": "constant_reto_threshold",
+                "type": "number",
+                "options": [],
+                "eventType": "FLIGHT",
+                "is_metadata": true,
+                "default_value": 0.2
+            },
+            {
+                "name": "constant_reto_warmup_time",
+                "type": "number",
+                "options": [],
+                "state": {
+                    "A351": 5,
+                    "A330": 5,
+                    "A339": 0,
+                    "B787": 0,
+                    "A332": 5,
+                    "A346": 5,
+                    "B744": 3
+                },
+                "formula": "data['constant_reto_warmup_time'] = None\nwarmuptime = []\nfor index, row in data.iterrows():\n\ttry:\n\t\tfound = False\n\t\tfor model in state.keys():\n\t\t\tif row['vehicle'] == model:\n\t\t\t\twarmuptime.append(state[model])\n\t\t\t\tfound = True\n\t\tif not found:\n\t\t\twarmuptime.append(3)\n\texcept Exception as e:\n\t\twarmuptime.append(None)\ndata['constant_reto_warmup_time'] = warmuptime",
+                "eventType": "FLIGHT",
+                "is_metadata": true
+            },
+            {
+                "name": "true_prediction_confidence_threshold",
+                "type": "number",
+                "options": [],
+                "eventType": "FLIGHT",
+                "default_value": 0.60
+            },
+            {
+                "name": "false_prediction_confidence_threshold",
+                "type": "number",
+                "options": [],
+                "eventType": "FLIGHT",
+                "default_value": 0.80
+            }
+        ]
+    }
+}
