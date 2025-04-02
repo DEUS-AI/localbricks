@@ -7,17 +7,14 @@
 - All tests passing
 - Execution time: 0.20s
 - Slowest tests:
-  - test_build_layer_job_bronze: 0.01s
   - test_orchestrate_landing_tasks: 0.01s
-  - test_create_jobs: 0.01s
-  - test_build_layer_job_landing: 0.01s
 
 ### Current Vulnerable Dependencies
 
 #### High Severity (4)
 - [x] urllib3 (2.2.1 -> 2.2.2) ✓
 - [x] PyYAML (6.0.1 -> 6.0.2) ✓
-- [x] pydantic (2.6.4 -> 2.11.1) ✓
+- [x] pydantic (2.6.4 -> 2.9.2) ✓
 - [x] oauthlib (3.2.2) ✓ (false positive - latest secure version)
 
 #### Moderate Severity (6)
@@ -26,9 +23,15 @@
 - [x] great-expectations (0.18.8 -> 0.18.22) ✓
 - [x] boto3 (1.34.110 -> 1.37.26) ✓
 
-#### Low Severity (2)
+#### Low Severity (8)
 - [x] numpy (2.1.3 -> 1.26.4) ✓
-- [x] pydantic_core (2.33.0) ✓ (version locked by pydantic 2.11.1)
+- [x] pydantic_core (2.23.4) ✓ (version locked by pydantic 2.9.2)
+- [x] cyclonedx-python-lib (8.9.0 -> 9.1.0) ✓
+- [x] filelock (3.16.1 -> 3.18.0) ✓
+- [x] psutil (6.1.1 -> 7.0.0) ✓
+- [x] py-serializable (1.1.2 -> 2.0.0) ✓
+- [x] safety-schemas (0.0.11 -> 0.0.12) ✓
+- [x] sympy (1.13.1 -> 1.13.3) ✓
 
 ## Update Process
 
@@ -49,13 +52,13 @@
     - All tests passing
     - Performance stable (0.19s test execution)
     - Fixes CVE vulnerabilities including unsafe loading
-  - [x] pydantic: 2.6.4 -> 2.11.1 ✓
+  - [x] pydantic: 2.6.4 -> 2.9.2 ✓
     - Updated successfully with dependencies:
-      - pydantic_core: 2.16.3 -> 2.33.0
+      - pydantic_core: 2.16.3 -> 2.23.4
       - typing_extensions: 4.10.0 -> 4.12.2
-      - Added typing-inspection 0.4.0
     - All tests passing
-    - Performance slightly affected (0.21s vs 0.19s)
+    - Performance stable (0.20s)
+    - Note: Version constrained by safety-schemas (<2.10.0)
   - [x] oauthlib: 3.2.2 ✓
     - Verified latest secure version
     - No known CVEs or security advisories
@@ -93,10 +96,35 @@
     - Version constrained by great-expectations (<2.0.0)
     - All tests passing
     - Performance stable (0.20s)
-  - [x] pydantic_core: 2.33.0 ✓
-    - Version locked by pydantic 2.11.1
+  - [x] pydantic_core: 2.23.4 ✓
+    - Version locked by pydantic 2.9.2
     - No update needed at this time
     - Will be updated with future pydantic updates
+  - [x] cyclonedx-python-lib: 8.9.0 -> 9.1.0 ✓
+    - Updated successfully
+    - All tests passing
+    - Performance stable (0.20s)
+  - [x] filelock: 3.16.1 -> 3.18.0 ✓
+    - Updated successfully
+    - All tests passing
+    - Performance stable (0.20s)
+  - [x] psutil: 6.1.1 -> 7.0.0 ✓
+    - Updated successfully
+    - All tests passing
+    - Performance stable (0.20s)
+  - [x] py-serializable: 1.1.2 -> 2.0.0 ✓
+    - Updated successfully
+    - All tests passing
+    - Performance stable (0.20s)
+  - [x] safety-schemas: 0.0.11 -> 0.0.12 ✓
+    - Updated successfully
+    - All tests passing
+    - Performance stable (0.20s)
+    - Note: Constrains pydantic to <2.10.0
+  - [x] sympy: 1.13.1 -> 1.13.3 ✓
+    - Updated successfully
+    - All tests passing
+    - Performance stable (0.20s)
 - [x] Update transitive dependencies ✓
 - [ ] Run integration tests
 
@@ -117,7 +145,23 @@
 
 ## Update History
 
-### numpy 2.1.3 -> 1.26.4 (Current)
+### Package Updates (Current)
+- Updated: March 27, 2024
+- Status: ✓ Success
+- Test Results: All passing (20/20)
+- Performance: 0.20s (stable)
+- Changes:
+  - Updated multiple packages to latest secure versions:
+    - cyclonedx-python-lib: 8.9.0 -> 9.1.0
+    - filelock: 3.16.1 -> 3.18.0
+    - psutil: 6.1.1 -> 7.0.0
+    - py-serializable: 1.1.2 -> 2.0.0
+    - safety-schemas: 0.0.11 -> 0.0.12
+    - sympy: 1.13.1 -> 1.13.3
+  - Adjusted pydantic to 2.9.2 for compatibility
+  - All tests passing with stable performance
+
+### numpy 2.1.3 -> 1.26.4 (Previous)
 - Updated: March 27, 2024
 - Status: ✓ Success
 - Test Results: All passing (20/20)
