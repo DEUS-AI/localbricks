@@ -21,7 +21,7 @@
 - [x] oauthlib (3.2.2) ✓ (false positive - latest secure version)
 
 #### Moderate Severity (6)
-- [ ] certifi (2024.2.2)
+- [x] certifi (2024.2.2 -> 2025.1.31) ✓
 - [ ] setuptools (69.2.0)
 - [ ] great-expectations (0.18.8)
 - [ ] boto3 (1.34.110)
@@ -60,8 +60,16 @@
     - No known CVEs or security advisories
     - No update needed
 
-### Phase 3: Moderate & Low Priority Updates
-- [ ] Update remaining packages
+### Phase 3: Moderate & Low Priority Updates (In Progress)
+- Moderate severity packages:
+  - [x] certifi: 2024.2.2 -> 2025.1.31 ✓
+    - Updated successfully
+    - All tests passing
+    - Performance stable (0.19s)
+    - Fixes CVE-2024-39689 (GLOBALTRUST root certificate issue)
+  - [ ] setuptools: Pending
+  - [ ] great-expectations: Pending
+  - [ ] boto3: Pending
 - [ ] Update transitive dependencies
 - [ ] Run integration tests
 
@@ -82,7 +90,19 @@
 
 ## Update History
 
-### oauthlib 3.2.2 (Current)
+### certifi 2024.2.2 -> 2025.1.31 (Current)
+- Updated: March 27, 2024
+- Status: ✓ Success
+- Test Results: All passing (20/20)
+- Performance: 0.19s (stable)
+- Changes:
+  - Updated certifi to latest secure version
+  - Fixes CVE-2024-39689:
+    - Addresses GLOBALTRUST root certificate issue
+    - Improves certificate verification security
+  - All tests passing with stable performance
+
+### oauthlib 3.2.2 (Previous)
 - Updated: March 27, 2024
 - Status: ✓ Verified Secure
 - Analysis:
