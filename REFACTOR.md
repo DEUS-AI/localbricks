@@ -13,6 +13,8 @@ This document tracks the refactoring of the codebase to make it more generic. Th
 - deus_lib/utils/pydantic_validation.py
 - deus_lib/bronze_factory/bronze_pydantic_validation.py
 - deus_lib/silver_factory/silver_pydantic_validation.py
+- src/tasks/dds/common_behaviours.py
+- src/tasks/dds/common_merge.py
 
 ## Remaining Changes
 
@@ -37,10 +39,16 @@ This document tracks the refactoring of the codebase to make it more generic. Th
   ✅ Updated validation error messages
 
 ### Phase 3: Client Job Updates
-- [ ] Review workflow_definition/clients_jobs/
-  - [ ] Update any client-specific job configurations
-  - [ ] Update client-specific task parameters
-  - [ ] Update client documentation
+✅ Review src/tasks/clients/
+  ✅ Renamed directory to src/tasks/dds/
+  ✅ Updated common_behaviours.py with new terminology
+  ✅ Updated common_merge.py with new terminology
+  ✅ Renamed import_client_module to import_dds_module
+  ✅ Updated function parameters and docstrings
+- [ ] Update DDS-specific job configurations
+  - [ ] Review and update each DDS code's mapping.json
+  - [ ] Update DDS-specific task parameters
+  - [ ] Update DDS-specific documentation
 
 ### Phase 4: Documentation Updates
 - [ ] Update README.md with new terminology
@@ -71,12 +79,17 @@ This document tracks the refactoring of the codebase to make it more generic. Th
   - Renamed extract_client_names to extract_dds_codes in pydantic_validation.py
   - Renamed ClientSettings to DataSettings in bronze_factory
   - Verified silver_factory already using new terminology
+- Updated client jobs to use new terminology:
+  - Renamed src/tasks/clients/ to src/tasks/dds/
+  - Updated common_behaviours.py and common_merge.py
+  - Renamed import_client_module to import_dds_module
+  - Updated function parameters and docstrings
 
 ## Next Steps
-1. Move on to Phase 3: Client Job Updates
-2. Review client-specific job configurations
-3. Update client-specific task parameters
-4. Update client documentation
+1. Continue with Phase 3: DDS Job Updates
+2. Review and update each DDS code's mapping.json
+3. Update DDS-specific task parameters
+4. Update DDS-specific documentation
 
 ## Notes
 - All new code should use the new terminology (`domain`, `dds_code`)
