@@ -22,7 +22,7 @@
 
 #### Moderate Severity (6)
 - [x] certifi (2024.2.2 -> 2025.1.31) ✓
-- [ ] setuptools (69.2.0)
+- [x] setuptools (69.2.0 -> 78.1.0) ✓
 - [ ] great-expectations (0.18.8)
 - [ ] boto3 (1.34.110)
 
@@ -67,7 +67,11 @@
     - All tests passing
     - Performance stable (0.19s)
     - Fixes CVE-2024-39689 (GLOBALTRUST root certificate issue)
-  - [ ] setuptools: Pending
+  - [x] setuptools: 69.2.0 -> 78.1.0 ✓
+    - Updated successfully
+    - All tests passing
+    - Performance stable (0.21s)
+    - Fixes CVE-2024-6345 (remote code execution vulnerability)
   - [ ] great-expectations: Pending
   - [ ] boto3: Pending
 - [ ] Update transitive dependencies
@@ -90,7 +94,20 @@
 
 ## Update History
 
-### certifi 2024.2.2 -> 2025.1.31 (Current)
+### setuptools 69.2.0 -> 78.1.0 (Current)
+- Updated: March 27, 2024
+- Status: ✓ Success
+- Test Results: All passing (20/20)
+- Performance: 0.21s (stable)
+- Changes:
+  - Updated setuptools to latest secure version
+  - Fixes CVE-2024-6345:
+    - Addresses remote code execution vulnerability
+    - Improves package_index module security
+  - Updated in both main and build dependencies
+  - All tests passing with stable performance
+
+### certifi 2024.2.2 -> 2025.1.31 (Previous)
 - Updated: March 27, 2024
 - Status: ✓ Success
 - Test Results: All passing (20/20)
