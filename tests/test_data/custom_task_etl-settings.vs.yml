@@ -1,5 +1,5 @@
-customer_code: VS
-industry: AVIATION
+dds_code: VS
+domain: AVIATION
 landing:
   ingestion:
     name: "ingestion"
@@ -8,11 +8,11 @@ landing:
         name: "raw_data"
         tasks:
           raw_data_task:
-            description: 'CSV Data from virgin atlantic'
+            description: "CSV Data from virgin atlantic"
             file_pattern:
-              name_regex: '*.csv'
+              name_regex: "*.csv"
               min_size_bytes: 1
-              format: 'csv'
+              format: "csv"
             compression: "false"
           custom_task:
             name: "custom_task"
@@ -28,11 +28,11 @@ landing:
         name: "cleaning_raw_data"
         tasks:
           raw_data_task:
-            description: 'CSV Data from virgin atlantic'
+            description: "CSV Data from virgin atlantic"
             file_pattern:
-              name_regex: '*.csv'
+              name_regex: "*.csv"
               min_size_bytes: 1
-              format: 'csv'
+              format: "csv"
             compression: "false"
 bronze:
   processing:
@@ -45,7 +45,7 @@ bronze:
             file_parser:
               args:
                 skipRows: 0
-                header: 'true'
+                header: "true"
             output_table_name: flight_data${var.tables_suffix}
       Fuel_Burn:
         name: "Fuel_Burn"
@@ -54,7 +54,7 @@ bronze:
             file_parser:
               args:
                 skipRows: 0
-                header: 'true'
+                header: "true"
             output_table_name: fuelburn_data${var.tables_suffix}
 silver:
   analysis:
@@ -64,7 +64,7 @@ silver:
         name: "silver_task"
         tasks:
           silver_task:
-            output_table_name: 'TBD'
+            output_table_name: "TBD"
 gold:
   reporting:
     name: "reporting"
@@ -73,4 +73,4 @@ gold:
         name: "gold_task"
         tasks:
           gold_task:
-            output_table_name: 'TBD'
+            output_table_name: "TBD"
