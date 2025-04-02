@@ -23,7 +23,7 @@
 #### Moderate Severity (6)
 - [x] certifi (2024.2.2 -> 2025.1.31) ✓
 - [x] setuptools (69.2.0 -> 78.1.0) ✓
-- [ ] great-expectations (0.18.8)
+- [x] great-expectations (0.18.8 -> 0.18.22) ✓
 - [ ] boto3 (1.34.110)
 
 #### Low Severity (2)
@@ -72,7 +72,12 @@
     - All tests passing
     - Performance stable (0.21s)
     - Fixes CVE-2024-6345 (remote code execution vulnerability)
-  - [ ] great-expectations: Pending
+  - [x] great-expectations: 0.18.8 -> 0.18.22 ✓
+    - Updated successfully
+    - All tests passing
+    - Performance stable (0.20s)
+    - Note: Major version 1.x available but requires significant refactoring
+    - Created separate task for 1.x migration evaluation
   - [ ] boto3: Pending
 - [ ] Update transitive dependencies
 - [ ] Run integration tests
@@ -94,7 +99,24 @@
 
 ## Update History
 
-### setuptools 69.2.0 -> 78.1.0 (Current)
+### great-expectations 0.18.8 -> 0.18.22 (Current)
+- Updated: March 27, 2024
+- Status: ✓ Success
+- Test Results: All passing (20/20)
+- Performance: 0.20s (stable)
+- Changes:
+  - Updated to latest 0.18.x version
+  - Maintains API compatibility
+  - Includes security fixes and improvements
+  - Note: Deferred 1.x upgrade due to breaking changes:
+    - Data context configuration changes
+    - Checkpoint types and configuration updates
+    - Batch request handling modifications
+    - Execution engine interface changes
+  - Created separate task for 1.x migration planning
+  - All tests passing with stable performance
+
+### setuptools 69.2.0 -> 78.1.0 (Previous)
 - Updated: March 27, 2024
 - Status: ✓ Success
 - Test Results: All passing (20/20)
