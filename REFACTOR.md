@@ -10,6 +10,9 @@ This document tracks the refactoring of the codebase to make it more generic. Th
 - tests/test_job_layer.py
 - tests/test_job_loader.py
 - tests/test_merge_jobs_main.py
+- deus_lib/utils/pydantic_validation.py
+- deus_lib/bronze_factory/bronze_pydantic_validation.py
+- deus_lib/silver_factory/silver_pydantic_validation.py
 
 ## Remaining Changes
 
@@ -24,13 +27,14 @@ This document tracks the refactoring of the codebase to make it more generic. Th
   - [ ] Consider adding example configurations for reference
 
 ### Phase 2: Validation and Utils Updates
-- [ ] Review and update deus_lib/utils/pydantic_validation.py
-  - [ ] Check for any remaining old terminology
-  - [ ] Update validation schemas if needed
-- [ ] Update factory validations
-  - [ ] Review bronze_factory/bronze_pydantic_validation.py
-  - [ ] Review silver_factory/silver_pydantic_validation.py
-  - [ ] Update any validation error messages
+✅ Review and update deus_lib/utils/pydantic_validation.py
+  ✅ Updated extract_client_names to extract_dds_codes
+  ✅ Updated error messages and docstrings
+  ✅ Verified validation schemas using new terminology
+✅ Update factory validations
+  ✅ Updated bronze_factory/bronze_pydantic_validation.py (ClientSettings → DataSettings)
+  ✅ Verified silver_factory/silver_pydantic_validation.py (already using new terminology)
+  ✅ Updated validation error messages
 
 ### Phase 3: Client Job Updates
 - [ ] Review workflow_definition/clients_jobs/
@@ -63,12 +67,16 @@ This document tracks the refactoring of the codebase to make it more generic. Th
   - Verified valid_etl-settings.vs.yml
   - Verified landing_job_config.yml
 - Noted absence of example configurations in docs/ directory
+- Updated validation files with new terminology:
+  - Renamed extract_client_names to extract_dds_codes in pydantic_validation.py
+  - Renamed ClientSettings to DataSettings in bronze_factory
+  - Verified silver_factory already using new terminology
 
 ## Next Steps
-1. Move on to Phase 2: Validation and Utils Updates
-2. Review pydantic validation files for old terminology
-3. Update factory validations
-4. Continue with client job updates
+1. Move on to Phase 3: Client Job Updates
+2. Review client-specific job configurations
+3. Update client-specific task parameters
+4. Update client documentation
 
 ## Notes
 - All new code should use the new terminology (`domain`, `dds_code`)
