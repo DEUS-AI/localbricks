@@ -14,12 +14,14 @@ This document tracks the refactoring of the codebase to make it more generic. Th
 ## Remaining Changes
 
 ### Phase 1: Template and Configuration Updates
-- [ ] Update test data templates in tests/test_data/
-  - [ ] Review and update valid_etl-settings.template.yml
-  - [ ] Update any other template files
+✅ Update test data templates in tests/test_data/
+  ✅ Review and update valid_etl-settings.template.yml
+  ✅ Update custom_task_etl-settings.vs.yml with new terminology
+  ✅ Verify valid_etl-settings.vs.yml terminology
+  ✅ Verify landing_job_config.yml terminology
 - [ ] Update example configurations in docs/
-  - [ ] Review and update example job configurations
-  - [ ] Update configuration documentation
+  ✅ No example configurations found in docs/
+  - [ ] Consider adding example configurations for reference
 
 ### Phase 2: Validation and Utils Updates
 - [ ] Review and update deus_lib/utils/pydantic_validation.py
@@ -55,12 +57,18 @@ This document tracks the refactoring of the codebase to make it more generic. Th
 - Core terminology changes (`industry` to `domain`, `customer_code` to `dds_code`) completed in main model and test files
 - Security updates merged into main branch
 - Test suite passing with updated terminology
+- Updated all test data templates with new terminology:
+  - Verified valid_etl-settings.template.yml
+  - Updated custom_task_etl-settings.vs.yml
+  - Verified valid_etl-settings.vs.yml
+  - Verified landing_job_config.yml
+- Noted absence of example configurations in docs/ directory
 
 ## Next Steps
-1. Begin with Phase 1: Template and Configuration Updates
-2. Review client jobs for any remaining old terminology
-3. Update documentation to reflect new terminology
-4. Run comprehensive tests to ensure no regressions
+1. Move on to Phase 2: Validation and Utils Updates
+2. Review pydantic validation files for old terminology
+3. Update factory validations
+4. Continue with client job updates
 
 ## Notes
 - All new code should use the new terminology (`domain`, `dds_code`)
