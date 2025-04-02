@@ -1,5 +1,5 @@
-customer_code: VS
-industry: AVIATION
+dds_code: VS
+domain: AVIATION
 landing:
   ingestion:
     tasks:
@@ -22,7 +22,7 @@ bronze:
         name: "Flight_Plans_task"
         file_pattern:
           name_regex: "*.csv"
-          min_size_bytes: "invalid_integer"  # Invalid type, should be int
+          min_size_bytes: "invalid_integer" # Invalid type, should be int
           format: "csv"
         compression: "false"
         python_file: "../src/tasks/bronze/csv_ingestion.py"
@@ -30,7 +30,6 @@ bronze:
           start_date: value1
           end_date: value2
         depends_on: []
-    tasks:
       data_expectations_task:
         name: "data_expectations_task"
         description: "Data expectations task"
@@ -38,8 +37,8 @@ bronze:
         parameters:
           file_parser:
             args:
-              skipRows: "zero"  # Invalid type, should be int
-              header: 'true'
+              skipRows: "zero" # Invalid type, should be int
+              header: "true"
           output_table_name: flight_data${var.tables_suffix}
         depends_on: ["Flight_Plans_task"]
       complete_bronze_task:
@@ -49,6 +48,6 @@ bronze:
           file_parser:
             args:
               skipRows: 0
-              header: 'true'
+              header: "true"
           output_table_name: fuelburn_data${var.tables_suffix}
         depends_on: ["data_expectations_task"]

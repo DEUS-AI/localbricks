@@ -1,5 +1,5 @@
-customer_code: VS
-industry: AVIATION
+dds_code: VS
+domain: AVIATION
 landing:
   ingestion:
     name: "ingestion"
