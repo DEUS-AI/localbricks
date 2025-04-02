@@ -26,7 +26,7 @@ class FileParser(BaseModel):
 class FilePattern(BaseModel):
     name: Optional[str] = None
 
-class ClientSettings(BaseModel):
+class DataSettings(BaseModel):
     output_table_name: str
     file_parser: FileParser
     file_pattern: Optional[FilePattern] = None
@@ -35,4 +35,4 @@ class IngestionConfig(BaseModel):
     spark: Any = Field(..., description="SparkSession object")
     file_type: str
     task_params: TaskParams
-    client_settings: ClientSettings
+    data_settings: DataSettings

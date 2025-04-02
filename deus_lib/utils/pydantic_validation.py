@@ -3,14 +3,14 @@ from typing import ClassVar, Optional
 from datetime import datetime
 import json, os
 
-def extract_client_names(file_path_from_root: str) -> set[str]:
-    """Extracts client names from a JSON file.
+def extract_dds_codes(file_path_from_root: str) -> set[str]:
+    """Extracts DDS codes from a JSON file.
 
     Args:
         file_path_from_root (str): The path to the JSON file, relative to the root of the project.
 
     Returns:
-        set[str]: A set of client names extracted from the JSON file.
+        set[str]: A set of DDS codes extracted from the JSON file.
 
     Raises:
         FileNotFoundError: If the specified file is not found.
@@ -19,22 +19,21 @@ def extract_client_names(file_path_from_root: str) -> set[str]:
 
     current_file_directory: str = os.path.dirname(os.path.abspath(__file__)).replace('/deus_lib/utils', '')
     full_path: str = os.path.join(current_file_directory, file_path_from_root)
-    client_names = []
+    dds_codes = []
 
-    
     try:
         with open(full_path, 'r') as file:
             data = json.load(file)
 
-        for client_settings in data:
-            client_name = client_settings['client_name'].split('-')[1]
-            client_names.append(client_name)
+        for settings in data:
+            dds_code = settings['dds_code'].split('-')[1]
+            dds_codes.append(dds_code)
 
-        return set(client_names)
+        return set(dds_codes)
     except FileNotFoundError:
-        raise FileNotFoundError("The customer codes file was not found.")
+        raise FileNotFoundError("The DDS codes file was not found.")
     except json.JSONDecodeError:
-        raise ValueError("Error decoding JSON from the customer codes file.")
+        raise ValueError("Error decoding JSON from the DDS codes file.")
     
 class TaskJobParamConfig(BaseModel):
     job_run_id: str
