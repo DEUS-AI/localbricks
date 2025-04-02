@@ -85,6 +85,18 @@ This document tracks the refactoring of the codebase to make it more generic. Th
   - Renamed import_client_module to import_dds_module
   - Updated function parameters and docstrings
 
+### 2024-04-02
+- Updated all mapping files to use new terminology:
+  - Replaced `customer_code` with `dds_code` in field names
+  - Replaced `industry` with `domain` in configuration
+  - Updated catalog paths from `client-*` to `dds-*`
+  - Updated `customerCode` to `ddsCode` in ST mapping
+- Renamed `clients` directory to `dds` to reflect new terminology
+- Updated common files to use new terminology:
+  - Modified `common_behaviours.py` to use `dds_code`
+  - Updated `common_merge.py` to use new terminology
+- All changes have been committed and pushed to the main branch
+
 ## Next Steps
 1. Continue with Phase 3: DDS Job Updates
 2. Review and update each DDS code's mapping.json
